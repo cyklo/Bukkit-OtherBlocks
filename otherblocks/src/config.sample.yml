@@ -40,14 +40,14 @@ otherblocks:
 #        quantity: 4
 #    GLOWING_REDSTONE_ORE:
 #        tool: GOLD_PICKAXE
-#        drop: GLOWSTONE_DIST
+#        drop: GLOWSTONE_DUST
 #        quantity: 4
 ##########
-# When you mine Gold with a diamond pickaxe,
+# When you mine Gold with flint & steel,
 # it comes pre-smelted!
 ###
 #    GOLD_ORE:
-#        tool: DIAMOND_PICKAXE
+#        tool: FLINT_AND_STEEL
 #        drop: GOLD_INGOT
 #        quantity: 1
 ##########
