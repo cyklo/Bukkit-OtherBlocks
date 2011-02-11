@@ -17,7 +17,7 @@ import org.bukkit.plugin.PluginManager;
 
 public class OtherBlocks extends JavaPlugin
 {
-	private List<OtherBlocksContainer> transformList = new ArrayList<OtherBlocksContainer>();
+	protected List<OtherBlocksContainer> transformList = new ArrayList<OtherBlocksContainer>();
 
 	private final OtherBlocksBlockListener blockListener = new OtherBlocksBlockListener(this);
 	private final Logger log = Logger.getLogger("Minecraft");
