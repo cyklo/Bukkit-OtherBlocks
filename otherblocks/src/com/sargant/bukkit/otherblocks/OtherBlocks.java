@@ -41,33 +41,48 @@ public class OtherBlocks extends JavaPlugin
 
 		if (!yml.exists())
 		{
-			try
-			{
+			try {
 				yml.createNewFile();
-				log.info("Created an empty file config.yml at " + getDataFolder() +", please edit it!");
-
-				getConfiguration().setProperty("otherblocks", "");
+				log.info("Created an empty file " + getDataFolder() +"/config.yml, please edit it!");
+				getConfiguration().setProperty("otherblocks", null);
 				getConfiguration().save();
-
-			}
-			catch (IOException ex){}
+			} catch (IOException ex){}
 		}
 		
 		// Load in the values from the configuration file
-		List<String> originalBlocks = getConfiguration().getKeys("otherblocks");
-		for(String s : originalBlocks)
+		List <String> keys;
+		try { 
+			keys = getConfiguration().getKeys(null); 
+		} catch(NullPointerException ex) {
+			log.warning(getDescription().getName() + ": no parent key not found");
+			return;
+		}
+		
+		if(!keys.contains("otherblocks"))
+		{
+			log.warning(getDescription().getName() + ": no 'otherblocks' key found");
+			return;
+		}
+		
+		keys.clear();
+		keys = getConfiguration().getKeys("otherblocks");
+
+		if(null == keys)
+		{
+			log.info(getDescription().getName() + ": no values found in config file!");
+			return;
+		}
+
+		for(String s : keys)
 		{
 			BlockTransform bt = new BlockTransform();
 
-			try
-			{
+			try {
 				bt.original = Material.valueOf(s);
 				bt.dropped  = Material.valueOf(getConfiguration().getString("otherblocks."+s+".drop"));
 				bt.tool     = Material.valueOf(getConfiguration().getString("otherblocks."+s+".tool"));
 				bt.quantity = getConfiguration().getInt("otherblocks."+s+".quantity", 1);
-			}
-			catch(IllegalArgumentException ex)
-			{
+			} catch(IllegalArgumentException ex) {
 				log.warning("Illegal block or tool value: " + s);
 				continue;
 			}
