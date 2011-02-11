@@ -1,77 +1,60 @@
 package com.sargant.bukkit.otherblocks;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockDamageLevel;
-import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.inventory.ItemStack;
 
 public class OtherBlocksBlockListener extends BlockListener
-{
-	@SuppressWarnings("unused")
+{	
 	private OtherBlocks parent;
-
+	
 	public OtherBlocksBlockListener(OtherBlocks instance)
 	{
 		parent = instance;
 	}
-
+	
 	public void onBlockDamage(BlockDamageEvent event)
 	{
-		if (event.isCancelled())
-		{
+		
+		if (event.isCancelled()) {
 			return;
 		}
-
-		List<Material> goodTools = new ArrayList<Material>();
-
-		goodTools.add(Material.GOLD_AXE);
-		goodTools.add(Material.GOLD_HOE);
-		goodTools.add(Material.GOLD_PICKAXE);
-		goodTools.add(Material.GOLD_SPADE);
-		goodTools.add(Material.GOLD_SWORD);
-
-		// Check that the currently held tool is an appropriate one
-		if(goodTools.contains(event.getPlayer().getItemInHand().getType()) == false)
-		{
+		
+		if(event.getDamageLevel() != BlockDamageLevel.BROKEN) {
 			return;
 		}
-
-		if (event.getDamageLevel() != BlockDamageLevel.BROKEN)
-		{
-			return;
-		}
-
-		Player p = event.getPlayer();
-		ItemStack t = p.getItemInHand();
-		Block b = event.getBlock();
-
-		Location lx = new Location(b.getWorld(), b.getX(), b.getY(), b.getZ());
-
-		if(b.getType() == Material.SAND && t.getType() == Material.GOLD_SPADE)
-		{
+		
+		for(OtherBlocksContainer obc : parent.transformList) {
+			
+			ItemStack tool = event.getPlayer().getItemInHand();
+			if(obc.tool != tool.getType()) {
+				continue;
+			}
+			
+			Block target  = event.getBlock();
+			if(obc.original != target.getType()) {
+				continue;
+			}
+			
+			Location lx = new Location(target.getWorld(), target.getX(), target.getY(), target.getZ());
+			
+			// At this point, the tool and the target block match
 			event.setCancelled(true);
-			b.setType(Material.AIR);
-			b.getWorld().dropItemNaturally(lx, new ItemStack(Material.GLOWSTONE_DUST, 4));
-			t.setDurability((short) (t.getDurability()+1));
-		}
-		else if(b.getType() == Material.COAL_ORE && t.getType() == Material.GOLD_PICKAXE)
-		{
-			event.setCancelled(true);
-			b.setType(Material.AIR);
-			b.getWorld().dropItemNaturally(lx, new ItemStack(Material.NETHERRACK, 1));
-			t.setDurability((short) (t.getDurability()+1));
-		}
-
-		if(t.getDurability() >= t.getType().getMaxDurability())
-		{
-			p.setItemInHand(null);
+			target.setType(Material.AIR);
+			target.getWorld().dropItemNaturally(lx, new ItemStack(obc.dropped, obc.quantity));
+			
+			// Now adjust the durability of the held tool
+			tool.setDurability((short) (tool.getDurability() + 1));
+			
+			// Manually check whether the tool has exceed its durability limit
+			if(tool.getDurability() >= tool.getType().getMaxDurability()) {
+				event.getPlayer().setItemInHand(null);
+			}
 		}
 	}
 }
