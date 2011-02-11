@@ -46,7 +46,9 @@ public class OtherBlocks extends JavaPlugin
 				log.info("Created an empty file " + getDataFolder() +"/config.yml, please edit it!");
 				getConfiguration().setProperty("otherblocks", null);
 				getConfiguration().save();
-			} catch (IOException ex){}
+			} catch (IOException ex){
+				log.warning(getDescription().getName() + ": could not generate config.yml. Are the file permissions OK?");
+			}
 		}
 		
 		// Load in the values from the configuration file
