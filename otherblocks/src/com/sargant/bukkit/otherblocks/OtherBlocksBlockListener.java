@@ -69,7 +69,7 @@ public class OtherBlocksBlockListener extends BlockListener
 			t.setDurability((short) (t.getDurability()+1));
 		}
 
-		if(t.getDurability() >= 32)
+		if(t.getDurability() >= t.getType().getMaxDurability())
 		{
 			p.setItemInHand(null);
 		}
