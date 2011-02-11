@@ -2,6 +2,7 @@ package com.sargant.bukkit.otherblocks;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -16,7 +17,15 @@ import org.bukkit.plugin.PluginManager;
 
 public class OtherBlocks extends JavaPlugin
 {
-	public String testval;
+	class BlockTransform
+	{
+		public Material original;
+		public Material dropped;
+		public Material tool;
+		public Integer quantity;
+	}
+	
+	private List<BlockTransform> transformList = new ArrayList<BlockTransform>();
 
 	private final OtherBlocksBlockListener blockListener = new OtherBlocksBlockListener(this);
 	private final Logger log = Logger.getLogger("Minecraft");
@@ -48,50 +57,31 @@ public class OtherBlocks extends JavaPlugin
 		List<String> originalBlocks = getConfiguration().getKeys("otherblocks");
 		for(String s : originalBlocks)
 		{
-			Material originalMaterial;
-			Material droppedMaterial;
-			Material toolUsed;
-			Integer dropQuantity;
-			
+			BlockTransform bt = new BlockTransform();
+
 			try
 			{
-				originalMaterial = Material.valueOf(s);
+				bt.original = Material.valueOf(s);
+				bt.dropped  = Material.valueOf(getConfiguration().getString("otherblocks."+s+".drop"));
+				bt.tool     = Material.valueOf(getConfiguration().getString("otherblocks."+s+".tool"));
+				bt.quantity = getConfiguration().getInt("otherblocks."+s+".quantity", 1);
 			}
 			catch(IllegalArgumentException ex)
 			{
-				log.warning("Illegal original block type: " + s);
+				log.warning("Illegal block or tool value: " + s);
 				continue;
 			}
-			
-			try
-			{
-			  droppedMaterial = Material.valueOf(getConfiguration().getString("otherblocks."+s+".drop"));
-			}
-			catch(IllegalArgumentException ex)
-			{
-				log.warning("Illegal new drop block type: " + s);
-				continue;
-			}
-			
-			try
-			{
-				toolUsed = Material.valueOf(getConfiguration().getString("otherblocks."+s+".tool"));
-			}
-			catch(IllegalArgumentException ex)
-			{
-				log.warning("Illegal tool type: " + s);
-				continue;
-			}
-			
-			dropQuantity = getConfiguration().getInt("otherblocks."+s+".quantity", 1);
-			
+
+			transformList.add(bt);
+
 			log.info(getDescription().getName() + ": " + 
-					toolUsed.toString() + " + " + 
-					originalMaterial.toString() + " now drops " + 
-					dropQuantity.toString() + "x " + droppedMaterial.toString());
+					bt.tool.toString() + " + " + 
+					bt.original.toString() + " now drops " + 
+					bt.quantity.toString() + "x " + bt.dropped.toString());
+
 		}
 	}
-
+	
 	public void onDisable()
 	{
 		log.info(getDescription().getName() + " " + getDescription().getVersion() + " unloaded.");
