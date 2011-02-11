@@ -17,15 +17,7 @@ import org.bukkit.plugin.PluginManager;
 
 public class OtherBlocks extends JavaPlugin
 {
-	class BlockTransform
-	{
-		public Material original;
-		public Material dropped;
-		public Material tool;
-		public Integer quantity;
-	}
-	
-	private List<BlockTransform> transformList = new ArrayList<BlockTransform>();
+	private List<OtherBlocksContainer> transformList = new ArrayList<OtherBlocksContainer>();
 
 	private final OtherBlocksBlockListener blockListener = new OtherBlocksBlockListener(this);
 	private final Logger log = Logger.getLogger("Minecraft");
@@ -77,7 +69,7 @@ public class OtherBlocks extends JavaPlugin
 
 		for(String s : keys)
 		{
-			BlockTransform bt = new BlockTransform();
+			OtherBlocksContainer bt = new OtherBlocksContainer();
 
 			try {
 				bt.original = Material.valueOf(s);
