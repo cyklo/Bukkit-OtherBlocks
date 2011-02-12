@@ -6,7 +6,8 @@ otherblocks:
 # NAME_OF_ORIGINAL_BLOCK:
 #     - tool: NAME_OF_TOOL
 #     - drop: NAME_OF_NEW_DROP
-#       quantity: AMOUNT_OF_NEW_DROP
+#     - quantity: AMOUNT_OF_NEW_DROP (optional, default 1)
+#     - damage: TOOL_DAMAGE (optional, default 1)
 #
 # You can repeat this as many times as you like within
 # the "otherblocks" key. You can also specify the same
@@ -28,6 +29,7 @@ otherblocks:
 #        tool: GOLD_SPADE
 #        drop: SOUL_SAND
 #        quantity: 1
+#        damage: 4
 ##########
 # Drop Glowstone Dust instead of
 # Redstone when mined with a golden pick
