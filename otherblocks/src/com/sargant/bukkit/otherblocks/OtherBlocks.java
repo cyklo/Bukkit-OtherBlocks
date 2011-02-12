@@ -76,6 +76,7 @@ public class OtherBlocks extends JavaPlugin
 				bt.dropped  = Material.valueOf(getConfiguration().getString("otherblocks."+s+".drop"));
 				bt.tool     = Material.valueOf(getConfiguration().getString("otherblocks."+s+".tool"));
 				bt.quantity = getConfiguration().getInt("otherblocks."+s+".quantity", 1);
+				bt.damage   = getConfiguration().getInt("otherblocks."+s+".damage", 1);
 			} catch(IllegalArgumentException ex) {
 				log.warning("Illegal block or tool value: " + s);
 				continue;

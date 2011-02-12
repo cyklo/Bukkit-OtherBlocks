@@ -49,7 +49,7 @@ public class OtherBlocksBlockListener extends BlockListener
 			target.getWorld().dropItemNaturally(lx, new ItemStack(obc.dropped, obc.quantity));
 			
 			// Now adjust the durability of the held tool
-			tool.setDurability((short) (tool.getDurability() + 1));
+			tool.setDurability((short) (tool.getDurability() + obc.damage));
 			
 			// Manually check whether the tool has exceed its durability limit
 			if(tool.getDurability() >= tool.getType().getMaxDurability()) {
