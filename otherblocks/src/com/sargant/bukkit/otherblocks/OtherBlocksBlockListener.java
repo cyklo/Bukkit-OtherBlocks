@@ -33,7 +33,7 @@ public class OtherBlocksBlockListener extends BlockListener
 			
 			// Check held item matches
 			ItemStack tool = event.getPlayer().getItemInHand();
-			if(obc.tool != tool.getType()) {
+			if(obc.tool != null && obc.tool != tool.getType()) {
 				continue;
 			}
 			

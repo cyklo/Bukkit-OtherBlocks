@@ -83,9 +83,11 @@ public class OtherBlocks extends JavaPlugin
 			OtherBlocksContainer bt = new OtherBlocksContainer();
 
 			try {
+				String toolString = getConfiguration().getString("otherblocks."+s+".tool");
+				bt.tool = (toolString.equalsIgnoreCase("ALL") ? null : Material.valueOf(toolString));
+				
 				bt.original = Material.valueOf(s);
 				bt.dropped  = Material.valueOf(getConfiguration().getString("otherblocks."+s+".drop"));
-				bt.tool     = Material.valueOf(getConfiguration().getString("otherblocks."+s+".tool"));
 				bt.quantity = getConfiguration().getInt("otherblocks."+s+".quantity", 1);
 				bt.damage   = getConfiguration().getInt("otherblocks."+s+".damage", 1);
 				bt.chance   = getConfiguration().getInt("otherblocks."+s+".chance", 100);
@@ -97,7 +99,7 @@ public class OtherBlocks extends JavaPlugin
 			transformList.add(bt);
 
 			log.info(getDescription().getName() + ": " + 
-					bt.tool.toString() + " + " + 
+					(bt.tool == null ? "ALL TOOLS" : bt.tool.toString()) + " + " + 
 					bt.original.toString() + " now drops " + 
 					bt.quantity.toString() + "x " + 
 					bt.dropped.toString() + " with " + 
