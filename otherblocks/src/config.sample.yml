@@ -8,6 +8,7 @@ otherblocks:
 #     - drop: NAME_OF_NEW_DROP
 #     - quantity: AMOUNT_OF_NEW_DROP (optional, default 1)
 #     - damage: TOOL_DAMAGE (optional, default 1)
+#     - chance: DROP_PROBABILITY_PERCENTAGE (optional, default 100)
 #
 # You can repeat this as many times as you like within
 # the "otherblocks" key. You can also specify the same
@@ -59,4 +60,5 @@ otherblocks:
 #        tool: AIR
 #        drop: DIAMOND
 #        quantity: 1
+#        chance: 33
 ##########

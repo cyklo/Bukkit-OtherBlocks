@@ -31,22 +31,29 @@ public class OtherBlocksBlockListener extends BlockListener
 		
 		for(OtherBlocksContainer obc : parent.transformList) {
 			
+			// Check held item matches
 			ItemStack tool = event.getPlayer().getItemInHand();
 			if(obc.tool != tool.getType()) {
 				continue;
 			}
 			
+			// Check target block matches
 			Block target  = event.getBlock();
 			if(obc.original != target.getType()) {
 				continue;
 			}
 			
-			Location lx = new Location(target.getWorld(), target.getX(), target.getY(), target.getZ());
+			// Check probability is great than the RNG
+			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)){
+				continue;
+			}
+			
+			Location location = new Location(target.getWorld(), target.getX(), target.getY(), target.getZ());
 			
 			// At this point, the tool and the target block match
 			event.setCancelled(true);
 			target.setType(Material.AIR);
-			target.getWorld().dropItemNaturally(lx, new ItemStack(obc.dropped, obc.quantity));
+			target.getWorld().dropItemNaturally(location, new ItemStack(obc.dropped, obc.quantity));
 			
 			// Now adjust the durability of the held tool
 			tool.setDurability((short) (tool.getDurability() + obc.damage));

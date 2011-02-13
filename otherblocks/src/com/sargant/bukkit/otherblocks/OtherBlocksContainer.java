@@ -9,4 +9,5 @@ public class OtherBlocksContainer
 	public Material tool;
 	public Integer quantity;
 	public Integer damage;
+	public Integer chance;
 }
