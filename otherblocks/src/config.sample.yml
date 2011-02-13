@@ -4,7 +4,7 @@ otherblocks:
 # Configuration blocks are set out as followed:
 #
 # NAME_OF_ORIGINAL_BLOCK:
-#     - tool: NAME_OF_TOOL
+#     - tool: NAME_OF_TOOL (or ALL for all tools)
 #     - drop: NAME_OF_NEW_DROP
 #     - quantity: AMOUNT_OF_NEW_DROP (optional, default 1)
 #     - damage: TOOL_DAMAGE (optional, default 1)
