@@ -55,8 +55,8 @@ public class OtherBlocksBlockListener extends BlockListener
 			target.setType(Material.AIR);
 			target.getWorld().dropItemNaturally(location, new ItemStack(obc.dropped, obc.quantity));
 			
-			// Drop out now if item doesn't have a durability
-			if(parent.getFixedMaxDurability(tool.getType()) < 0) {
+			// Drop out now if item doesn't have a durability or is a block
+			if(parent.getFixedMaxDurability(tool.getType()) < 0 || tool.getType().isBlock()) {
 				continue;
 			}
 			
