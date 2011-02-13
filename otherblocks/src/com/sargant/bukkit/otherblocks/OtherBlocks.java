@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
 
 import org.bukkit.Material;
@@ -18,6 +19,7 @@ import org.bukkit.plugin.PluginManager;
 public class OtherBlocks extends JavaPlugin
 {
 	protected List<OtherBlocksContainer> transformList = new ArrayList<OtherBlocksContainer>();
+	protected Random rng = new Random();
 
 	private final OtherBlocksBlockListener blockListener = new OtherBlocksBlockListener(this);
 	private final Logger log = Logger.getLogger("Minecraft");
@@ -77,6 +79,7 @@ public class OtherBlocks extends JavaPlugin
 				bt.tool     = Material.valueOf(getConfiguration().getString("otherblocks."+s+".tool"));
 				bt.quantity = getConfiguration().getInt("otherblocks."+s+".quantity", 1);
 				bt.damage   = getConfiguration().getInt("otherblocks."+s+".damage", 1);
+				bt.chance   = getConfiguration().getInt("otherblocks."+s+".chance", 100);
 			} catch(IllegalArgumentException ex) {
 				log.warning("Illegal block or tool value: " + s);
 				continue;
@@ -87,7 +90,9 @@ public class OtherBlocks extends JavaPlugin
 			log.info(getDescription().getName() + ": " + 
 					bt.tool.toString() + " + " + 
 					bt.original.toString() + " now drops " + 
-					bt.quantity.toString() + "x " + bt.dropped.toString());
+					bt.quantity.toString() + "x " + 
+					bt.dropped.toString() + " with " + 
+					bt.chance.toString() + "% chance");
 
 		}
 	}
