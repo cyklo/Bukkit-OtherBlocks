@@ -55,11 +55,16 @@ public class OtherBlocksBlockListener extends BlockListener
 			target.setType(Material.AIR);
 			target.getWorld().dropItemNaturally(location, new ItemStack(obc.dropped, obc.quantity));
 			
+			// Drop out now if item doesn't have a durability
+			if(parent.getFixedMaxDurability(tool.getType()) < 0) {
+				continue;
+			}
+			
 			// Now adjust the durability of the held tool
 			tool.setDurability((short) (tool.getDurability() + obc.damage));
 			
 			// Manually check whether the tool has exceed its durability limit
-			if(tool.getDurability() >= tool.getType().getMaxDurability()) {
+			if(tool.getDurability() >= parent.getFixedMaxDurability(tool.getType())) {
 				event.getPlayer().setItemInHand(null);
 			}
 		}
