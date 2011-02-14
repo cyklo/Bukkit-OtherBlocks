@@ -3,6 +3,7 @@ package com.sargant.bukkit.otherblocks;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -78,33 +79,55 @@ public class OtherBlocks extends JavaPlugin
 			return;
 		}
 
-		for(String s : keys)
-		{
-			OtherBlocksContainer bt = new OtherBlocksContainer();
-
-			try {
-				String toolString = getConfiguration().getString("otherblocks."+s+".tool");
-				bt.tool = (toolString.equalsIgnoreCase("ALL") ? null : Material.valueOf(toolString));
-				
-				bt.original = Material.valueOf(s);
-				bt.dropped  = Material.valueOf(getConfiguration().getString("otherblocks."+s+".drop"));
-				bt.quantity = getConfiguration().getInt("otherblocks."+s+".quantity", 1);
-				bt.damage   = getConfiguration().getInt("otherblocks."+s+".damage", 1);
-				bt.chance   = getConfiguration().getInt("otherblocks."+s+".chance", 100);
-			} catch(IllegalArgumentException ex) {
-				log.warning("Illegal block or tool value: " + s);
+		for(String s : keys) {
+			List<Object> original_children = getConfiguration().getList("otherblocks."+s);	
+			
+			if(original_children == null) {
+				log.warning("Block \""+s+"\" has no children. Have you included the dash?");
 				continue;
 			}
+			
+			for(Object o : original_children) {
+				if(o instanceof HashMap) {
+					
+					OtherBlocksContainer bt = new OtherBlocksContainer();
+					
+					try {
+						@SuppressWarnings("unchecked")
+						HashMap<String, Object> m = (HashMap<String, Object>) o;
+						
+						bt.original = Material.valueOf(s);
 
-			transformList.add(bt);
+						String toolString = String.class.cast(m.get("tool"));
+						bt.tool = (toolString.equalsIgnoreCase("ALL") ? null : Material.valueOf(toolString));
 
-			log.info(getDescription().getName() + ": " + 
-					(bt.tool == null ? "ALL TOOLS" : bt.tool.toString()) + " + " + 
-					bt.original.toString() + " now drops " + 
-					bt.quantity.toString() + "x " + 
-					bt.dropped.toString() + " with " + 
-					bt.chance.toString() + "% chance");
+						bt.dropped = Material.valueOf(String.class.cast(m.get("drop")));
 
+						Integer dropQuantity = Integer.class.cast(m.get("quantity"));
+						bt.quantity = (dropQuantity == null || dropQuantity <= 0) ? 1 : dropQuantity;
+
+						Integer toolDamage = Integer.class.cast(m.get("damage"));
+						bt.damage = (toolDamage == null || toolDamage < 0) ? 1 : toolDamage;
+
+						Integer dropChance = Integer.class.cast(m.get("chance"));
+						bt.chance = (dropChance == null || dropChance < 0 || dropChance > 100) ? 100 : dropChance;
+						
+					} catch(IllegalArgumentException ex) {
+						log.warning("Error while processing block: " + s);
+						continue;
+					}
+					
+					transformList.add(bt);
+					
+					log.info(getDescription().getName() + ": " + 
+							(bt.tool == null ? "ALL TOOLS" : bt.tool.toString()) + " + " + 
+							bt.original.toString() + " now drops " + 
+							bt.quantity.toString() + "x " + 
+							bt.dropped.toString() + " with " + 
+							bt.chance.toString() + "% chance");
+					
+				}
+			}
 		}
 	}
 	
