@@ -5,15 +5,26 @@ otherblocks:
 #
 # NAME_OF_ORIGINAL_BLOCK:
 #     - tool: NAME_OF_TOOL (or ALL for all tools)
-#     - drop: NAME_OF_NEW_DROP
-#     - quantity: AMOUNT_OF_NEW_DROP (optional, default 1)
-#     - damage: TOOL_DAMAGE (optional, default 1)
-#     - chance: DROP_PROBABILITY_PERCENTAGE (optional, default 100)
+#       drop: NAME_OF_NEW_DROP
+#       quantity: AMOUNT_OF_NEW_DROP (optional, default 1)
+#       damage: TOOL_DAMAGE (optional, default 1)
+#       chance: DROP_PROBABILITY_PERCENTAGE (optional, default 100)
 #
-# You can repeat this as many times as you like within
-# the "otherblocks" key. You can also specify the same
-# original block multiple times if you want it to drop
-# different things based on what tool you are using
+# If you want to add a different drop based on a
+# different tool but for the same original block,
+# simply repeat the indented block again, but make
+# sure you start with "- tool", e.g.
+#
+# GRASS:
+#     - tool: AIR
+#       drop: GRAVEL
+#
+#     - tool: DIRT
+#       drop: STONE
+#
+# A tool: ALL statement sets the drop for any
+# tools not yet specified. Therefore, it should
+# always be the last item in a list.
 #
 # For the list of names you can use for the blocks
 # and tools, please see http://cliqr.org/V
@@ -26,39 +37,39 @@ otherblocks:
 # Drop Soulsand when you dig out
 # gravel with a golden shovel
 ###
-#    GRAVEL:
-#        tool: GOLD_SPADE
-#        drop: SOUL_SAND
-#        quantity: 1
-#        damage: 4
+#        GRAVEL:
+#            - tool: GOLD_SPADE
+#              drop: SOUL_SAND
+#              quantity: 1
+#              damage: 4
 ##########
 # Drop Glowstone Dust instead of
 # Redstone when mined with a golden pick
 # Note: redstone can also be glowing, so
 # specify both
 ###
-#    REDSTONE_ORE:
-#        tool: GOLD_PICKAXE
-#        drop: GLOWSTONE_DUST
-#        quantity: 4
-#    GLOWING_REDSTONE_ORE:
-#        tool: GOLD_PICKAXE
-#        drop: GLOWSTONE_DUST
-#        quantity: 4
+#        REDSTONE_ORE:
+#            - tool: GOLD_PICKAXE
+#              drop: GLOWSTONE_DUST
+#              quantity: 4
+#        GLOWING_REDSTONE_ORE:
+#            - tool: GOLD_PICKAXE
+#              drop: GLOWSTONE_DUST
+#              quantity: 4
 ##########
 # When you mine Gold with flint & steel,
 # it comes pre-smelted!
 ###
-#    GOLD_ORE:
-#        tool: FLINT_AND_STEEL
-#        drop: GOLD_INGOT
-#        quantity: 1
+#        GOLD_ORE:
+#            - tool: FLINT_AND_STEEL
+#              drop: GOLD_INGOT
+#              quantity: 1
 ##########
 # The leaves are now diamonds!
 ###
-#    LEAVES:
-#        tool: AIR
-#        drop: DIAMOND
-#        quantity: 1
-#        chance: 33
+#        LEAVES:
+#            - tool: AIR
+#              drop: DIAMOND
+#              quantity: 1
+#              chance: 33
 ##########
