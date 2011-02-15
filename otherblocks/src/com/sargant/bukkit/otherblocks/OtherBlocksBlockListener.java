@@ -53,7 +53,7 @@ public class OtherBlocksBlockListener extends BlockListener
 			// At this point, the tool and the target block match
 			event.setCancelled(true);
 			target.setType(Material.AIR);
-			target.getWorld().dropItemNaturally(location, new ItemStack(obc.dropped, obc.quantity));
+			target.getWorld().dropItemNaturally(location, new ItemStack(obc.dropped, obc.quantity, obc.color));
 			
 			// Drop out now if item doesn't have a durability or is a block
 			if(parent.getFixedMaxDurability(tool.getType()) < 0 || tool.getType().isBlock()) {
