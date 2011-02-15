@@ -4,8 +4,7 @@ package com.sargant.bukkit.otherblocks;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockDamageLevel;
-import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,14 +17,10 @@ public class OtherBlocksBlockListener extends BlockListener
 		parent = instance;
 	}
 	
-	public void onBlockDamage(BlockDamageEvent event)
+	public void onBlockBreak(BlockBreakEvent event)
 	{
 		
 		if (event.isCancelled()) {
-			return;
-		}
-		
-		if(event.getDamageLevel() != BlockDamageLevel.BROKEN) {
 			return;
 		}
 		

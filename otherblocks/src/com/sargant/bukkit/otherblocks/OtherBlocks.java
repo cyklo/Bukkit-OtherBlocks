@@ -144,9 +144,8 @@ public class OtherBlocks extends JavaPlugin
 	public void onEnable()
 	{
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvent(Event.Type.BLOCK_DAMAGED, blockListener, Priority.Lowest, this);
+		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Lowest, this);
 
 		log.info(getDescription().getName() + " " + getDescription().getVersion() + " loaded.");
 	}
 }
-
