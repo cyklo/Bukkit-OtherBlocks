@@ -88,7 +88,7 @@ public class OtherBlocks extends JavaPlugin
 			}
 			
 			for(Object o : original_children) {
-				if(o instanceof HashMap) {
+				if(o instanceof HashMap<?,?>) {
 					
 					OtherBlocksContainer bt = new OtherBlocksContainer();
 					
