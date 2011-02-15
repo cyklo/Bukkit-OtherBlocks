@@ -10,4 +10,5 @@ public class OtherBlocksContainer
 	public Integer quantity;
 	public Integer damage;
 	public Integer chance;
+	public short color;
 }
