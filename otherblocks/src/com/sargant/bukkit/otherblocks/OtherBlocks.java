@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.event.Event;
@@ -112,6 +113,9 @@ public class OtherBlocks extends JavaPlugin
 
 						Integer dropChance = Integer.class.cast(m.get("chance"));
 						bt.chance = (dropChance == null || dropChance < 0 || dropChance > 100) ? 100 : dropChance;
+						
+						DyeColor dropColor = DyeColor.valueOf(String.class.cast(m.get("color")));
+						bt.color = ((dropColor == null) ? null : dropColor.getData());
 						
 					} catch(IllegalArgumentException ex) {
 						log.warning("Error while processing block: " + s);
