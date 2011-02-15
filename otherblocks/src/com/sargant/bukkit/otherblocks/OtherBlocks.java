@@ -27,11 +27,12 @@ public class OtherBlocks extends JavaPlugin
 	
 	//These are fixes for the broken getMaxDurability and getMaxStackSize in Bukkit
 	public short getFixedMaxDurability(Material m) {
-		return (short) ((Material.DIAMOND_PICKAXE.getMaxStackSize() > 1) ? m.getMaxStackSize() : m.getMaxDurability());
+		// If the maxstacksize is -1, then the values are the wrong way round
+		return (short) ((m.getMaxStackSize() < 1) ? m.getMaxStackSize() : m.getMaxDurability());
 	}
 	
 	public int getFixedMaxStackSize(Material m) {
-		return (int) ((Material.DIAMOND_PICKAXE.getMaxStackSize() > 1) ? m.getMaxDurability() : m.getMaxStackSize());
+		return (int) ((m.getMaxStackSize() < 1) ? m.getMaxDurability() : m.getMaxStackSize());
 	}
 
 	public OtherBlocks(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader)
@@ -139,7 +140,7 @@ public class OtherBlocks extends JavaPlugin
 	public void onEnable()
 	{
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvent(Event.Type.BLOCK_DAMAGED, blockListener, Priority.Monitor, this);
+		pm.registerEvent(Event.Type.BLOCK_DAMAGED, blockListener, Priority.Lowest, this);
 
 		log.info(getDescription().getName() + " " + getDescription().getVersion() + " loaded.");
 	}
