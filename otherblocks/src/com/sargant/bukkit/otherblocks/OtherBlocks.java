@@ -101,6 +101,7 @@ public class OtherBlocks extends JavaPlugin
 						bt.original = Material.valueOf(s);
 
 						String toolString = String.class.cast(m.get("tool"));
+						if(toolString.equalsIgnoreCase("DYE")) { toolString = "INK_SACK"; }
 						bt.tool = (toolString.equalsIgnoreCase("ALL") ? null : Material.valueOf(toolString));
 
 						bt.dropped = Material.valueOf(String.class.cast(m.get("drop")));
