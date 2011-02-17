@@ -115,10 +115,13 @@ public class OtherBlocks extends JavaPlugin
 						Integer dropChance = Integer.class.cast(m.get("chance"));
 						bt.chance = (dropChance == null || dropChance < 0 || dropChance > 100) ? 100 : dropChance;
 						
-						DyeColor dropColor = DyeColor.valueOf(String.class.cast(m.get("color")));
-						bt.color = ((dropColor == null) ? null : dropColor.getData());
+						String dropColor = String.class.cast(m.get("color"));
+						bt.color = ((dropColor == null) ? 0 : DyeColor.valueOf(dropColor).getData());
 						
 					} catch(IllegalArgumentException ex) {
+						log.warning("Error while processing block: " + s);
+						continue;
+					} catch(NullPointerException ex) {
 						log.warning("Error while processing block: " + s);
 						continue;
 					}
