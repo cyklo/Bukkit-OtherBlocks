@@ -43,7 +43,7 @@ public class OtherBlocksBlockListener extends BlockListener
 			}
 			
 			// Check probability is great than the RNG
-			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)){
+			if(parent.rng.nextDouble() > (obc.chance/100)){
 				continue;
 			}
 			

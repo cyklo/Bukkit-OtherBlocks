@@ -112,7 +112,7 @@ public class OtherBlocks extends JavaPlugin
 						Integer toolDamage = Integer.class.cast(m.get("damage"));
 						bt.damage = (toolDamage == null || toolDamage < 0) ? 1 : toolDamage;
 
-						Integer dropChance = Integer.class.cast(m.get("chance"));
+						Double dropChance = Double.class.cast(m.get("chance"));
 						bt.chance = (dropChance == null || dropChance < 0 || dropChance > 100) ? 100 : dropChance;
 						
 						String dropColor = String.class.cast(m.get("color"));
