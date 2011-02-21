@@ -110,7 +110,10 @@ public class OtherBlocks extends JavaPlugin
 						if(toolString.equalsIgnoreCase("DYE")) { toolString = "INK_SACK"; }
 						bt.tool = (toolString.equalsIgnoreCase("ALL") ? null : Material.valueOf(toolString));
 
-						bt.dropped = Material.valueOf(String.valueOf(m.get("drop")));
+						String dropString = String.valueOf(m.get("drop"));
+						bt.dropped = Material.valueOf(dropString);
+						
+						bt.droptype = "MATERIAL";
 
 						Integer dropQuantity = Integer.getInteger(String.valueOf(m.get("quantity")), 1);
 						bt.quantity = (dropQuantity <= 0) ? 1 : dropQuantity;

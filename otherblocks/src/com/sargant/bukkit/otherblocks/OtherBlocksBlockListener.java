@@ -51,7 +51,15 @@ public class OtherBlocksBlockListener extends BlockListener
 			
 			// At this point, the tool and the target block match
 			successfulConversion = true;
-			target.getWorld().dropItemNaturally(location, new ItemStack(obc.dropped, obc.quantity, obc.color));
+			try {
+				if(obc.droptype.equalsIgnoreCase("MATERIAL")) {
+					target.getWorld().dropItemNaturally(location, new ItemStack(obc.dropped, obc.quantity, obc.color));
+				} else {
+					throw new Exception("InvalidDropType");
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 			maxDamage = (maxDamage < obc.damage) ? obc.damage : maxDamage;
 			
 		}
