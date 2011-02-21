@@ -102,34 +102,35 @@ public class OtherBlocks extends JavaPlugin
 					OtherBlocksContainer bt = new OtherBlocksContainer();
 					
 					try {
-						@SuppressWarnings("unchecked")
-						HashMap<String, Object> m = (HashMap<String, Object>) o;
+						HashMap<?, ?> m = (HashMap<?, ?>) o;
 						
 						bt.original = Material.valueOf(s);
 
-						String toolString = String.class.cast(m.get("tool"));
+						String toolString = String.valueOf(m.get("tool"));
 						if(toolString.equalsIgnoreCase("DYE")) { toolString = "INK_SACK"; }
 						bt.tool = (toolString.equalsIgnoreCase("ALL") ? null : Material.valueOf(toolString));
 
-						bt.dropped = Material.valueOf(String.class.cast(m.get("drop")));
+						bt.dropped = Material.valueOf(String.valueOf(m.get("drop")));
 
-						Integer dropQuantity = Integer.class.cast(m.get("quantity"));
-						bt.quantity = (dropQuantity == null || dropQuantity <= 0) ? 1 : dropQuantity;
+						Integer dropQuantity = Integer.getInteger(String.valueOf(m.get("quantity")), 1);
+						bt.quantity = (dropQuantity <= 0) ? 1 : dropQuantity;
 
-						Integer toolDamage = Integer.class.cast(m.get("damage"));
-						bt.damage = (toolDamage == null || toolDamage < 0) ? 1 : toolDamage;
+						Integer toolDamage = Integer.getInteger(String.valueOf(m.get("damage")), 1);
+						bt.damage = (toolDamage < 0) ? 1 : toolDamage;
 
-						Integer dropChance = Integer.class.cast(m.get("chance"));
-						bt.chance = (dropChance == null || dropChance < 0 || dropChance > 100) ? 100 : dropChance;
+						Double dropChance;
+						try {
+							dropChance = Double.valueOf(String.valueOf(m.get("chance")));
+							bt.chance = (dropChance < 0 || dropChance > 100) ? 100 : dropChance;
+						} catch(NumberFormatException ex) {
+							bt.chance = 100.0;
+						}
 						
-						String dropColor = String.class.cast(m.get("color"));
-						bt.color = ((dropColor == null) ? 0 : DyeColor.valueOf(dropColor).getData());
+						String dropColor = String.valueOf(m.get("color"));
+						bt.color = ((dropColor == "null") ? 0 : DyeColor.valueOf(dropColor).getData());
 						
-					} catch(IllegalArgumentException ex) {
-						log.warning("Error while processing block: " + s);
-						continue;
-					} catch(NullPointerException ex) {
-						log.warning("Error while processing block: " + s);
+					} catch(Throwable ex) {
+						log.warning("Error while processing block " + s + ": " + ex.getMessage());
 						continue;
 					}
 					
