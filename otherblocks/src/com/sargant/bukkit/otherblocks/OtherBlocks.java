@@ -10,21 +10,17 @@ import java.util.logging.Logger;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 
 public class OtherBlocks extends JavaPlugin
 {
-	protected List<OtherBlocksContainer> transformList = new ArrayList<OtherBlocksContainer>();
-	protected Random rng = new Random();
-
-	private final OtherBlocksBlockListener blockListener = new OtherBlocksBlockListener(this);
-	private final Logger log = Logger.getLogger("Minecraft");
+	protected List<OtherBlocksContainer> transformList;
+	protected Random rng;
+	private final OtherBlocksBlockListener blockListener;
+	private final Logger log;
 	
 	//These are fixes for the broken getMaxDurability and getMaxStackSize in Bukkit
 	public short getFixedMaxDurability(Material m) {
@@ -35,14 +31,25 @@ public class OtherBlocks extends JavaPlugin
 	public int getFixedMaxStackSize(Material m) {
 		return (int) ((m.getMaxStackSize() < 1) ? m.getMaxDurability() : m.getMaxStackSize());
 	}
+	
+	public OtherBlocks() {
+		
+		transformList = new ArrayList<OtherBlocksContainer>();
+		rng = new Random();
+		blockListener = new OtherBlocksBlockListener(this);
+		log = Logger.getLogger("Minecraft");
+	}
 
-	public OtherBlocks(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader)
+	public void onDisable()
 	{
-		super(pluginLoader, instance, desc, folder, plugin, cLoader);
+		log.info(getDescription().getName() + " " + getDescription().getVersion() + " unloaded.");
+	}
 
+	public void onEnable()
+	{
 		// Initialize and read in the YAML file
 		
-		folder.mkdirs();
+		getDataFolder().mkdirs();
 		File yml = new File(getDataFolder(), "config.yml");
 
 		if (!yml.exists())
@@ -138,15 +145,9 @@ public class OtherBlocks extends JavaPlugin
 				}
 			}
 		}
-	}
-	
-	public void onDisable()
-	{
-		log.info(getDescription().getName() + " " + getDescription().getVersion() + " unloaded.");
-	}
-
-	public void onEnable()
-	{
+		
+		// Done setting up plugin
+		
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Lowest, this);
 
