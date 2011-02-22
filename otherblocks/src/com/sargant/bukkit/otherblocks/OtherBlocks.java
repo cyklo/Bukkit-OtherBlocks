@@ -113,7 +113,7 @@ public class OtherBlocks extends JavaPlugin
 
 						String dropString = String.valueOf(m.get("drop"));
 						
-						if(dropString.substring(0, 9).equalsIgnoreCase("CREATURE_")) {
+						if(dropString.length() > 9 && dropString.substring(0, 9).equalsIgnoreCase("CREATURE_")) {
 							bt.dropped = CreatureType.valueOf(dropString.substring(9)).toString();
 							bt.droptype = "CREATURE";
 						} else {
