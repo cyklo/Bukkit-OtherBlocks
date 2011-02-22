@@ -4,6 +4,7 @@ package com.sargant.bukkit.otherblocks;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.CreatureType;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.inventory.ItemStack;
@@ -53,7 +54,9 @@ public class OtherBlocksBlockListener extends BlockListener
 			successfulConversion = true;
 			try {
 				if(obc.droptype.equalsIgnoreCase("MATERIAL")) {
-					target.getWorld().dropItemNaturally(location, new ItemStack(obc.dropped, obc.quantity, obc.color));
+					target.getWorld().dropItemNaturally(location, new ItemStack(Material.valueOf(obc.dropped), obc.quantity, obc.color));
+				} else if(obc.droptype.equalsIgnoreCase("CREATURE")) {
+					target.getWorld().spawnCreature(new Location(target.getWorld(), location.getX() + 0.5, location.getY() + 1, location.getZ() + 0.5), CreatureType.valueOf(obc.dropped));
 				} else {
 					throw new Exception("InvalidDropType");
 				}
@@ -61,7 +64,6 @@ public class OtherBlocksBlockListener extends BlockListener
 				e.printStackTrace();
 			}
 			maxDamage = (maxDamage < obc.damage) ? obc.damage : maxDamage;
-			
 		}
 		
 		if(successfulConversion) {
