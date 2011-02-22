@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.entity.CreatureType;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -111,9 +112,14 @@ public class OtherBlocks extends JavaPlugin
 						bt.tool = (toolString.equalsIgnoreCase("ALL") ? null : Material.valueOf(toolString));
 
 						String dropString = String.valueOf(m.get("drop"));
-						bt.dropped = Material.valueOf(dropString);
 						
-						bt.droptype = "MATERIAL";
+						if(dropString.substring(0, 9).equalsIgnoreCase("CREATURE_")) {
+							bt.dropped = CreatureType.valueOf(dropString.substring(9)).toString();
+							bt.droptype = "CREATURE";
+						} else {
+							bt.dropped = Material.valueOf(dropString).toString();
+							bt.droptype = "MATERIAL";
+						}
 
 						Integer dropQuantity = Integer.getInteger(String.valueOf(m.get("quantity")), 1);
 						bt.quantity = (dropQuantity <= 0) ? 1 : dropQuantity;

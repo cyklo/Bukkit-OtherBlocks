@@ -5,7 +5,7 @@ import org.bukkit.Material;
 public class OtherBlocksContainer
 {
 	public Material original;
-	public Material dropped;
+	public String dropped;
 	public String droptype;
 	public Material tool;
 	public Integer quantity;
