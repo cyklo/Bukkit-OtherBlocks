@@ -121,11 +121,11 @@ public class OtherBlocks extends JavaPlugin
 							bt.droptype = "MATERIAL";
 						}
 
-						Integer dropQuantity = Integer.getInteger(String.valueOf(m.get("quantity")), 1);
-						bt.quantity = (dropQuantity <= 0) ? 1 : dropQuantity;
+						Integer dropQuantity = Integer.class.cast(m.get("quantity"));
+						bt.quantity = (dropQuantity == null || dropQuantity <= 0) ? 1 : dropQuantity;
 
-						Integer toolDamage = Integer.getInteger(String.valueOf(m.get("damage")), 1);
-						bt.damage = (toolDamage < 0) ? 1 : toolDamage;
+						Integer toolDamage = Integer.class.cast(m.get("damage"));
+						bt.damage = (toolDamage == null || toolDamage < 0) ? 1 : toolDamage;
 
 						Double dropChance;
 						try {
