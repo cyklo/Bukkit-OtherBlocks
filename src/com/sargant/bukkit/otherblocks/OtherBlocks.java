@@ -23,6 +23,7 @@ public class OtherBlocks extends JavaPlugin
 	private final OtherBlocksBlockListener blockListener;
 	private final Logger log;
 	protected Integer verbosity;
+	protected Priority pri;
 	
 	//These are fixes for the broken getMaxDurability and getMaxStackSize in Bukkit
 	public short getFixedMaxDurability(Material m) {
@@ -41,6 +42,7 @@ public class OtherBlocks extends JavaPlugin
 		blockListener = new OtherBlocksBlockListener(this);
 		log = Logger.getLogger("Minecraft");
 		verbosity = 2;
+		pri = Priority.Lowest;
 	}
 
 	public void onDisable()
@@ -82,6 +84,15 @@ public class OtherBlocks extends JavaPlugin
 			if(verb_string.equalsIgnoreCase("low")) { verbosity = 1; }
 			else if(verb_string.equalsIgnoreCase("high")) { verbosity = 3; }
 			else { verbosity = 2; }
+		}
+		
+		if(keys.contains("priority")) {
+			String priority_string = getConfiguration().getString("priority", "lowest");
+			if(priority_string.equalsIgnoreCase("low")) { pri = Priority.Low; }
+			else if(priority_string.equalsIgnoreCase("normal")) { pri = Priority.Normal; }
+			else if(priority_string.equalsIgnoreCase("high")) { pri = Priority.High; }
+			else if(priority_string.equalsIgnoreCase("highest")) { pri = Priority.Highest; }
+			else { pri = Priority.Lowest; }
 		}
 		
 		if(!keys.contains("otherblocks"))
@@ -172,7 +183,7 @@ public class OtherBlocks extends JavaPlugin
 		// Done setting up plugin
 		
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Lowest, this);
+		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, pri, this);
 
 		log.info(getDescription().getName() + " " + getDescription().getVersion() + " loaded.");
 	}
