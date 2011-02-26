@@ -1,5 +1,10 @@
 # Set this to "low" to reduce number of boot messages
 verbosity: normal
+
+# Try adjusting this if you have compatibility problems with other plguins.
+# Default: "lowest". Can also use "low", "normal", "high", "highest".
+priority: lowest
+
 otherblocks:
 ##########
 # This is a sample configuration file for OtherBlocks
