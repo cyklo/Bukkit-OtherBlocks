@@ -22,6 +22,7 @@ public class OtherBlocks extends JavaPlugin
 	protected Random rng;
 	private final OtherBlocksBlockListener blockListener;
 	private final Logger log;
+	protected Integer verbosity;
 	
 	//These are fixes for the broken getMaxDurability and getMaxStackSize in Bukkit
 	public short getFixedMaxDurability(Material m) {
@@ -39,6 +40,7 @@ public class OtherBlocks extends JavaPlugin
 		rng = new Random();
 		blockListener = new OtherBlocksBlockListener(this);
 		log = Logger.getLogger("Minecraft");
+		verbosity = 2;
 	}
 
 	public void onDisable()
@@ -72,6 +74,14 @@ public class OtherBlocks extends JavaPlugin
 		} catch(NullPointerException ex) {
 			log.warning(getDescription().getName() + ": no parent key not found");
 			return;
+		}
+		
+		if(keys.contains("verbosity")) {
+			String verb_string = getConfiguration().getString("verbosity", "normal");
+			
+			if(verb_string.equalsIgnoreCase("low")) { verbosity = 1; }
+			else if(verb_string.equalsIgnoreCase("high")) { verbosity = 3; }
+			else { verbosity = 2; }
 		}
 		
 		if(!keys.contains("otherblocks"))
@@ -139,19 +149,22 @@ public class OtherBlocks extends JavaPlugin
 						bt.color = ((dropColor == "null") ? 0 : DyeColor.valueOf(dropColor).getData());
 						
 					} catch(Throwable ex) {
-						log.warning("Error while processing block " + s + ": " + ex.getMessage());
+						if(verbosity > 1) {
+						  log.warning("Error while processing block " + s + ": " + ex.getMessage());
+						}
 						continue;
 					}
 					
 					transformList.add(bt);
 					
-					log.info(getDescription().getName() + ": " + 
+					if(verbosity > 1) {
+					  log.info(getDescription().getName() + ": " + 
 							(bt.tool == null ? "ALL TOOLS" : bt.tool.toString()) + " + " + 
 							bt.original.toString() + " now drops " + 
 							bt.quantity.toString() + "x " + 
 							bt.dropped.toString() + " with " + 
 							bt.chance.toString() + "% chance");
-					
+					}
 				}
 			}
 		}
