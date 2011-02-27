@@ -21,7 +21,8 @@ public class OtherBlocks extends JavaPlugin
 	protected List<OtherBlocksContainer> transformList;
 	protected Random rng;
 	private final OtherBlocksBlockListener blockListener;
-	private final Logger log;
+	//private final OtherBlocksEntityListener entityListener;
+	protected final Logger log;
 	protected Integer verbosity;
 	protected Priority pri;
 	
@@ -35,11 +36,56 @@ public class OtherBlocks extends JavaPlugin
 		return (int) ((m.getMaxStackSize() < 1) ? m.getMaxDurability() : m.getMaxStackSize());
 	}
 	
+	public short getWoolColor(DyeColor color) {
+		switch (color) {
+			case WHITE: return 0x0;
+			case ORANGE: return 0x1;
+			case MAGENTA: return 0x2;
+			case LIGHT_BLUE: return 0x3;
+			case YELLOW: return 0x4;
+			case LIME: return 0x5;
+			case PINK: return 0x6;
+			case GRAY: return 0x7;
+			case SILVER: return 0x8;
+			case CYAN: return 0x9;
+			case PURPLE: return 0xA;
+			case BLUE: return 0xB;
+			case BROWN: return 0xC;
+			case GREEN: return 0xD;
+			case RED: return 0xE;
+			case BLACK: return 0xF;
+			default: return 0xF;
+		}
+	}
+	
+	public short getDyeColor(DyeColor color) {
+		switch (color) {
+			case WHITE: return 0xF;
+			case ORANGE: return 0xE;
+			case MAGENTA: return 0xD;
+			case LIGHT_BLUE: return 0xC;
+			case YELLOW: return 0xB;
+			case LIME: return 0xA;
+			case PINK: return 0x9;
+			case GRAY: return 0x8;
+			case SILVER: return 0x7;
+			case CYAN: return 0x6;
+			case PURPLE: return 0x5;
+			case BLUE: return 0x4;
+			case BROWN: return 0x3;
+			case GREEN: return 0x2;
+			case RED: return 0x1;
+			case BLACK: return 0x0;
+			default: return 0x0;
+		}
+	}
+	
 	public OtherBlocks() {
 		
 		transformList = new ArrayList<OtherBlocksContainer>();
 		rng = new Random();
 		blockListener = new OtherBlocksBlockListener(this);
+		//entityListener = new OtherBlocksEntityListener(this);
 		log = Logger.getLogger("Minecraft");
 		verbosity = 2;
 		pri = Priority.Lowest;
@@ -126,13 +172,27 @@ public class OtherBlocks extends JavaPlugin
 					try {
 						HashMap<?, ?> m = (HashMap<?, ?>) o;
 						
+						// Source block
 						bt.original = Material.valueOf(s);
 
+						// Tool used
 						String toolString = String.valueOf(m.get("tool"));
-						if(toolString.equalsIgnoreCase("DYE")) { toolString = "INK_SACK"; }
-						bt.tool = (toolString.equalsIgnoreCase("ALL") ? null : Material.valueOf(toolString));
+						
+						if(toolString.equalsIgnoreCase("DYE")) {
+							toolString = "INK_SACK"; 
+						}
+						
+						if(toolString.equalsIgnoreCase("ALL") || toolString.equalsIgnoreCase("ANY")) {
+							bt.tool = null;
+						} else {
+							bt.tool = Material.valueOf(toolString);
+						}
 
+						// Dropped item
 						String dropString = String.valueOf(m.get("drop"));
+						if(dropString.equalsIgnoreCase("DYE")) {
+							dropString = "INK_SACK";
+						}
 						
 						if(dropString.length() > 9 && dropString.substring(0, 9).equalsIgnoreCase("CREATURE_")) {
 							bt.dropped = CreatureType.valueOf(dropString.substring(9)).toString();
@@ -141,13 +201,33 @@ public class OtherBlocks extends JavaPlugin
 							bt.dropped = Material.valueOf(dropString).toString();
 							bt.droptype = "MATERIAL";
 						}
+						
+						// Dropped color
+						String dropColor = String.valueOf(m.get("color"));
+						
+						if(dropColor == "null") {
+							bt.color = 0;
+						}
+						else if(dropString.equalsIgnoreCase("WOOL")) {
+							bt.color = getWoolColor(DyeColor.valueOf(dropColor));
+						}
+						else if(dropString.equalsIgnoreCase("INK_SACK")) {
+							bt.color = getDyeColor(DyeColor.valueOf(dropColor));
+						}
+						else
+						{
+							bt.color = 0;
+						}
 
+						// Dropped quantity
 						Integer dropQuantity = Integer.class.cast(m.get("quantity"));
 						bt.quantity = (dropQuantity == null || dropQuantity <= 0) ? 1 : dropQuantity;
 
+						// Tool damage
 						Integer toolDamage = Integer.class.cast(m.get("damage"));
 						bt.damage = (toolDamage == null || toolDamage < 0) ? 1 : toolDamage;
 
+						// Drop probability
 						Double dropChance;
 						try {
 							dropChance = Double.valueOf(String.valueOf(m.get("chance")));
@@ -155,9 +235,6 @@ public class OtherBlocks extends JavaPlugin
 						} catch(NumberFormatException ex) {
 							bt.chance = 100.0;
 						}
-						
-						String dropColor = String.valueOf(m.get("color"));
-						bt.color = ((dropColor == "null") ? 0 : DyeColor.valueOf(dropColor).getData());
 						
 					} catch(Throwable ex) {
 						if(verbosity > 1) {
@@ -184,6 +261,7 @@ public class OtherBlocks extends JavaPlugin
 		
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, pri, this);
+		//pm.registerEvent(Event.Type.ENTITY_DEATH, entityListener, pri, this);
 
 		log.info(getDescription().getName() + " " + getDescription().getVersion() + " loaded.");
 	}
