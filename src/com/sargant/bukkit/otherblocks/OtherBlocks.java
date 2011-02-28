@@ -25,63 +25,63 @@ public class OtherBlocks extends JavaPlugin
 	protected final Logger log;
 	protected Integer verbosity;
 	protected Priority pri;
-	
+
 	//These are fixes for the broken getMaxDurability and getMaxStackSize in Bukkit
 	public short getFixedMaxDurability(Material m) {
 		// If the maxstacksize is -1, then the values are the wrong way round
 		return (short) ((m.getMaxStackSize() < 1) ? m.getMaxStackSize() : m.getMaxDurability());
 	}
-	
+
 	public int getFixedMaxStackSize(Material m) {
-		return (int) ((m.getMaxStackSize() < 1) ? m.getMaxDurability() : m.getMaxStackSize());
+		return ((m.getMaxStackSize() < 1) ? m.getMaxDurability() : m.getMaxStackSize());
 	}
-	
+
 	public short getWoolColor(DyeColor color) {
 		switch (color) {
-			case WHITE: return 0x0;
-			case ORANGE: return 0x1;
-			case MAGENTA: return 0x2;
-			case LIGHT_BLUE: return 0x3;
-			case YELLOW: return 0x4;
-			case LIME: return 0x5;
-			case PINK: return 0x6;
-			case GRAY: return 0x7;
-			case SILVER: return 0x8;
-			case CYAN: return 0x9;
-			case PURPLE: return 0xA;
-			case BLUE: return 0xB;
-			case BROWN: return 0xC;
-			case GREEN: return 0xD;
-			case RED: return 0xE;
-			case BLACK: return 0xF;
-			default: return 0xF;
+		case WHITE: return 0x0;
+		case ORANGE: return 0x1;
+		case MAGENTA: return 0x2;
+		case LIGHT_BLUE: return 0x3;
+		case YELLOW: return 0x4;
+		case LIME: return 0x5;
+		case PINK: return 0x6;
+		case GRAY: return 0x7;
+		case SILVER: return 0x8;
+		case CYAN: return 0x9;
+		case PURPLE: return 0xA;
+		case BLUE: return 0xB;
+		case BROWN: return 0xC;
+		case GREEN: return 0xD;
+		case RED: return 0xE;
+		case BLACK: return 0xF;
+		default: return 0xF;
 		}
 	}
-	
+
 	public short getDyeColor(DyeColor color) {
 		switch (color) {
-			case WHITE: return 0xF;
-			case ORANGE: return 0xE;
-			case MAGENTA: return 0xD;
-			case LIGHT_BLUE: return 0xC;
-			case YELLOW: return 0xB;
-			case LIME: return 0xA;
-			case PINK: return 0x9;
-			case GRAY: return 0x8;
-			case SILVER: return 0x7;
-			case CYAN: return 0x6;
-			case PURPLE: return 0x5;
-			case BLUE: return 0x4;
-			case BROWN: return 0x3;
-			case GREEN: return 0x2;
-			case RED: return 0x1;
-			case BLACK: return 0x0;
-			default: return 0x0;
+		case WHITE: return 0xF;
+		case ORANGE: return 0xE;
+		case MAGENTA: return 0xD;
+		case LIGHT_BLUE: return 0xC;
+		case YELLOW: return 0xB;
+		case LIME: return 0xA;
+		case PINK: return 0x9;
+		case GRAY: return 0x8;
+		case SILVER: return 0x7;
+		case CYAN: return 0x6;
+		case PURPLE: return 0x5;
+		case BLUE: return 0x4;
+		case BROWN: return 0x3;
+		case GREEN: return 0x2;
+		case RED: return 0x1;
+		case BLACK: return 0x0;
+		default: return 0x0;
 		}
 	}
-	
+
 	public OtherBlocks() {
-		
+
 		transformList = new ArrayList<OtherBlocksContainer>();
 		rng = new Random();
 		blockListener = new OtherBlocksBlockListener(this);
@@ -99,7 +99,7 @@ public class OtherBlocks extends JavaPlugin
 	public void onEnable()
 	{
 		// Initialize and read in the YAML file
-		
+
 		getDataFolder().mkdirs();
 		File yml = new File(getDataFolder(), "config.yml");
 
@@ -114,24 +114,24 @@ public class OtherBlocks extends JavaPlugin
 				log.warning(getDescription().getName() + ": could not generate config.yml. Are the file permissions OK?");
 			}
 		}
-		
+
 		// Load in the values from the configuration file
 		List <String> keys;
-		try { 
-			keys = getConfiguration().getKeys(null); 
+		try {
+			keys = getConfiguration().getKeys(null);
 		} catch(NullPointerException ex) {
 			log.warning(getDescription().getName() + ": no parent key not found");
 			return;
 		}
-		
+
 		if(keys.contains("verbosity")) {
 			String verb_string = getConfiguration().getString("verbosity", "normal");
-			
+
 			if(verb_string.equalsIgnoreCase("low")) { verbosity = 1; }
 			else if(verb_string.equalsIgnoreCase("high")) { verbosity = 3; }
 			else { verbosity = 2; }
 		}
-		
+
 		if(keys.contains("priority")) {
 			String priority_string = getConfiguration().getString("priority", "lowest");
 			if(priority_string.equalsIgnoreCase("low")) { pri = Priority.Low; }
@@ -140,13 +140,13 @@ public class OtherBlocks extends JavaPlugin
 			else if(priority_string.equalsIgnoreCase("highest")) { pri = Priority.Highest; }
 			else { pri = Priority.Lowest; }
 		}
-		
+
 		if(!keys.contains("otherblocks"))
 		{
 			log.warning(getDescription().getName() + ": no 'otherblocks' key found");
 			return;
 		}
-		
+
 		keys.clear();
 		keys = getConfiguration().getKeys("otherblocks");
 
@@ -157,35 +157,50 @@ public class OtherBlocks extends JavaPlugin
 		}
 
 		for(String s : keys) {
-			List<Object> original_children = getConfiguration().getList("otherblocks."+s);	
-			
+			List<Object> original_children = getConfiguration().getList("otherblocks."+s);
+
 			if(original_children == null) {
 				log.warning("Block \""+s+"\" has no children. Have you included the dash?");
 				continue;
 			}
-			
+
 			for(Object o : original_children) {
 				if(o instanceof HashMap<?,?>) {
-					
+
 					OtherBlocksContainer bt = new OtherBlocksContainer();
-					
+
 					try {
 						HashMap<?, ?> m = (HashMap<?, ?>) o;
-						
+
 						// Source block
 						bt.original = Material.valueOf(s);
 
 						// Tool used
-						String toolString = String.valueOf(m.get("tool"));
-						
-						if(toolString.equalsIgnoreCase("DYE")) {
-							toolString = "INK_SACK"; 
-						}
-						
-						if(toolString.equalsIgnoreCase("ALL") || toolString.equalsIgnoreCase("ANY")) {
-							bt.tool = null;
+						bt.tool = new ArrayList<Material>();
+
+						if(m.get("tool") instanceof String) {
+
+							String toolString = (String) m.get("tool");
+
+							if(toolString.equalsIgnoreCase("DYE")) {
+								toolString = "INK_SACK";
+							}
+
+							if(toolString.equalsIgnoreCase("ALL") || toolString.equalsIgnoreCase("ANY")) {
+								bt.tool.add((Material) null);
+							} else {
+								bt.tool.add(Material.valueOf(toolString));
+							}
+
+						} else if (m.get("tool") instanceof List<?>) {
+
+							for(Object listTool : (List<?>) m.get("tool")) {
+								System.out.println("Listed tool " + ((String) listTool));
+								bt.tool.add(Material.valueOf((String) listTool));
+							}
+
 						} else {
-							bt.tool = Material.valueOf(toolString);
+							throw new Exception("Not a recognizable type");
 						}
 
 						// Dropped item
@@ -193,7 +208,7 @@ public class OtherBlocks extends JavaPlugin
 						if(dropString.equalsIgnoreCase("DYE")) {
 							dropString = "INK_SACK";
 						}
-						
+
 						if(dropString.length() > 9 && dropString.substring(0, 9).equalsIgnoreCase("CREATURE_")) {
 							bt.dropped = CreatureType.valueOf(dropString.substring(9)).toString();
 							bt.droptype = "CREATURE";
@@ -201,10 +216,10 @@ public class OtherBlocks extends JavaPlugin
 							bt.dropped = Material.valueOf(dropString).toString();
 							bt.droptype = "MATERIAL";
 						}
-						
+
 						// Dropped color
 						String dropColor = String.valueOf(m.get("color"));
-						
+
 						if(dropColor == "null") {
 							bt.color = 0;
 						}
@@ -235,30 +250,32 @@ public class OtherBlocks extends JavaPlugin
 						} catch(NumberFormatException ex) {
 							bt.chance = 100.0;
 						}
-						
+
 					} catch(Throwable ex) {
 						if(verbosity > 1) {
-						  log.warning("Error while processing block " + s + ": " + ex.getMessage());
+							log.warning("Error while processing block " + s + ": " + ex.getMessage());
 						}
+
+						ex.printStackTrace();
 						continue;
 					}
-					
+
 					transformList.add(bt);
-					
+
 					if(verbosity > 1) {
-					  log.info(getDescription().getName() + ": " + 
-							(bt.tool == null ? "ALL TOOLS" : bt.tool.toString()) + " + " + 
-							bt.original.toString() + " now drops " + 
-							bt.quantity.toString() + "x " + 
-							bt.dropped.toString() + " with " + 
-							bt.chance.toString() + "% chance");
+						log.info(getDescription().getName() + ": " +
+								(bt.tool.contains(null) ? "ALL TOOLS" : (bt.tool.size() == 1 ? bt.tool.get(0).toString() : bt.tool.toString())) + " + " +
+								bt.original.toString() + " now drops " +
+								(bt.quantity != 1 ? bt.quantity.toString() + "x " : "") +
+								bt.dropped.toString() +
+								(bt.chance < 100 ? " with " + bt.chance.toString() + "% chance" : ""));
 					}
 				}
 			}
 		}
-		
+
 		// Done setting up plugin
-		
+
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, pri, this);
 		//pm.registerEvent(Event.Type.ENTITY_DEATH, entityListener, pri, this);
