@@ -55,7 +55,10 @@ public class OtherBlocksBlockListener extends BlockListener
 			successfulConversion = true;
 			try {
 				if(obc.droptype.equalsIgnoreCase("MATERIAL")) {
-					target.getWorld().dropItemNaturally(location, new ItemStack(Material.valueOf(obc.dropped), obc.quantity, obc.color));
+					// Special exemption for AIR - breaks the map! :-/
+					if(Material.valueOf(obc.dropped) != Material.AIR) {
+						target.getWorld().dropItemNaturally(location, new ItemStack(Material.valueOf(obc.dropped), obc.quantity, obc.color));
+					}
 				} else if(obc.droptype.equalsIgnoreCase("CREATURE")) {
 					target.getWorld().spawnCreature(new Location(target.getWorld(), location.getX() + 0.5, location.getY() + 1, location.getZ() + 0.5), CreatureType.valueOf(obc.dropped));
 				} else {
