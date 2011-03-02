@@ -1,20 +1,17 @@
 package com.sargant.bukkit.otherblocks;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.io.*;
+import java.util.*;
 import java.util.logging.Logger;
 
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
+
+import com.sargant.bukkit.common.Common;
 
 public class OtherBlocks extends JavaPlugin
 {
@@ -25,60 +22,6 @@ public class OtherBlocks extends JavaPlugin
 	protected final Logger log;
 	protected Integer verbosity;
 	protected Priority pri;
-
-	//These are fixes for the broken getMaxDurability and getMaxStackSize in Bukkit
-	public short getFixedMaxDurability(Material m) {
-		// If the maxstacksize is -1, then the values are the wrong way round
-		return (short) ((m.getMaxStackSize() < 1) ? m.getMaxStackSize() : m.getMaxDurability());
-	}
-
-	public int getFixedMaxStackSize(Material m) {
-		return ((m.getMaxStackSize() < 1) ? m.getMaxDurability() : m.getMaxStackSize());
-	}
-
-	public short getWoolColor(DyeColor color) {
-		switch (color) {
-		case WHITE: return 0x0;
-		case ORANGE: return 0x1;
-		case MAGENTA: return 0x2;
-		case LIGHT_BLUE: return 0x3;
-		case YELLOW: return 0x4;
-		case LIME: return 0x5;
-		case PINK: return 0x6;
-		case GRAY: return 0x7;
-		case SILVER: return 0x8;
-		case CYAN: return 0x9;
-		case PURPLE: return 0xA;
-		case BLUE: return 0xB;
-		case BROWN: return 0xC;
-		case GREEN: return 0xD;
-		case RED: return 0xE;
-		case BLACK: return 0xF;
-		default: return 0xF;
-		}
-	}
-
-	public short getDyeColor(DyeColor color) {
-		switch (color) {
-		case WHITE: return 0xF;
-		case ORANGE: return 0xE;
-		case MAGENTA: return 0xD;
-		case LIGHT_BLUE: return 0xC;
-		case YELLOW: return 0xB;
-		case LIME: return 0xA;
-		case PINK: return 0x9;
-		case GRAY: return 0x8;
-		case SILVER: return 0x7;
-		case CYAN: return 0x6;
-		case PURPLE: return 0x5;
-		case BLUE: return 0x4;
-		case BROWN: return 0x3;
-		case GREEN: return 0x2;
-		case RED: return 0x1;
-		case BLACK: return 0x0;
-		default: return 0x0;
-		}
-	}
 
 	public OtherBlocks() {
 
@@ -98,8 +41,6 @@ public class OtherBlocks extends JavaPlugin
 
 	public void onEnable()
 	{
-		// Initialize and read in the YAML file
-
 		getDataFolder().mkdirs();
 		File yml = new File(getDataFolder(), "config.yml");
 
@@ -116,29 +57,14 @@ public class OtherBlocks extends JavaPlugin
 		}
 
 		// Load in the values from the configuration file
-		List <String> keys;
-		try {
-			keys = getConfiguration().getKeys(null);
-		} catch(NullPointerException ex) {
+		verbosity = Common.getVerbosity(this);
+		pri = Common.getPriority(this);
+		
+		List <String> keys = Common.getRootKeys(this);
+		
+		if(keys == null) {
 			log.warning(getDescription().getName() + ": no parent key not found");
 			return;
-		}
-
-		if(keys.contains("verbosity")) {
-			String verb_string = getConfiguration().getString("verbosity", "normal");
-
-			if(verb_string.equalsIgnoreCase("low")) { verbosity = 1; }
-			else if(verb_string.equalsIgnoreCase("high")) { verbosity = 3; }
-			else { verbosity = 2; }
-		}
-
-		if(keys.contains("priority")) {
-			String priority_string = getConfiguration().getString("priority", "lowest");
-			if(priority_string.equalsIgnoreCase("low")) { pri = Priority.Low; }
-			else if(priority_string.equalsIgnoreCase("normal")) { pri = Priority.Normal; }
-			else if(priority_string.equalsIgnoreCase("high")) { pri = Priority.High; }
-			else if(priority_string.equalsIgnoreCase("highest")) { pri = Priority.Highest; }
-			else { pri = Priority.Lowest; }
 		}
 
 		if(!keys.contains("otherblocks"))
@@ -224,10 +150,10 @@ public class OtherBlocks extends JavaPlugin
 							bt.color = 0;
 						}
 						else if(dropString.equalsIgnoreCase("WOOL")) {
-							bt.color = getWoolColor(DyeColor.valueOf(dropColor));
+							bt.color = Common.getWoolColor(DyeColor.valueOf(dropColor));
 						}
 						else if(dropString.equalsIgnoreCase("INK_SACK")) {
-							bt.color = getDyeColor(DyeColor.valueOf(dropColor));
+							bt.color = Common.getDyeColor(DyeColor.valueOf(dropColor));
 						}
 						else
 						{
