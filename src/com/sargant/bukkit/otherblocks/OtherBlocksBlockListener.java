@@ -40,7 +40,7 @@ public class OtherBlocksBlockListener extends BlockListener
 
 			// Check target block matches
 
-			if(obc.original != event.getBlock().getType()) {
+			if(!obc.originaltype.equalsIgnoreCase("MATERIAL") || Material.valueOf(obc.original) != event.getBlock().getType()) {
 				continue;
 			}
 
