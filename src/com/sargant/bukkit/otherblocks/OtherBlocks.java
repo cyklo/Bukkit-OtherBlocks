@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import org.bukkit.*;
-import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,9 +16,10 @@ import com.sargant.bukkit.common.Common;
 public class OtherBlocks extends JavaPlugin
 {
 	protected List<OtherBlocksContainer> transformList;
+	protected Map<Entity, OtherBlocksDamager> damagerList;
 	protected Random rng;
 	private final OtherBlocksBlockListener blockListener;
-	//private final OtherBlocksEntityListener entityListener;
+	private final OtherBlocksEntityListener entityListener;
 	protected final Logger log;
 	protected Integer verbosity;
 	protected Priority pri;
@@ -26,9 +27,10 @@ public class OtherBlocks extends JavaPlugin
 	public OtherBlocks() {
 
 		transformList = new ArrayList<OtherBlocksContainer>();
+		damagerList = new HashMap<Entity, OtherBlocksDamager>();
 		rng = new Random();
 		blockListener = new OtherBlocksBlockListener(this);
-		//entityListener = new OtherBlocksEntityListener(this);
+		entityListener = new OtherBlocksEntityListener(this);
 		log = Logger.getLogger("Minecraft");
 		verbosity = 2;
 		pri = Priority.Lowest;
@@ -99,7 +101,15 @@ public class OtherBlocks extends JavaPlugin
 						HashMap<?, ?> m = (HashMap<?, ?>) o;
 
 						// Source block
-						bt.original = Material.valueOf(s);
+						String originalString = s;
+						
+						if(originalString.length() > 9 && originalString.substring(0, 9).equalsIgnoreCase("CREATURE_")) {
+							bt.original = CreatureType.valueOf(originalString.substring(9)).toString();
+							bt.originaltype = "CREATURE";
+						} else {
+							bt.original = Material.valueOf(originalString).toString();
+							bt.originaltype = "MATERIAL";
+						}
 
 						// Tool used
 						bt.tool = new ArrayList<Material>();
@@ -204,7 +214,8 @@ public class OtherBlocks extends JavaPlugin
 
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, pri, this);
-		//pm.registerEvent(Event.Type.ENTITY_DEATH, entityListener, pri, this);
+		pm.registerEvent(Event.Type.ENTITY_DEATH, entityListener, pri, this);
+		pm.registerEvent(Event.Type.ENTITY_DAMAGED, entityListener, pri, this);
 
 		log.info(getDescription().getName() + " " + getDescription().getVersion() + " loaded.");
 	}
