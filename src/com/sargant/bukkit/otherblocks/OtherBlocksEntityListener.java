@@ -60,6 +60,11 @@ public class OtherBlocksEntityListener extends EntityListener
 		
 		for(OtherBlocksContainer obc : parent.transformList) {
 			
+			// Check world matches
+			if(!obc.worlds.contains(null) && !obc.worlds.contains(event.getEntity().getWorld().getName())) {
+				continue;
+			}
+			
 			// Check held item matches
 			if(!obc.tool.contains(null) && !obc.tool.contains(weapon)) {
 				continue;
