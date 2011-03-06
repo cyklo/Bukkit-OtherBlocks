@@ -137,7 +137,6 @@ public class OtherBlocks extends JavaPlugin
 						} else if (m.get("tool") instanceof List<?>) {
 
 							for(Object listTool : (List<?>) m.get("tool")) {
-								System.out.println("Listed tool " + ((String) listTool));
 								bt.tool.add(Material.valueOf((String) listTool));
 							}
 
