@@ -37,10 +37,14 @@ public class OtherBlocksBlockListener extends BlockListener
 			if(!obc.tool.contains(null) && !obc.tool.contains(tool.getType())) {
 				continue;
 			}
-
+			
+			// Check target block is not a creature
+			if(parent.isCreature(obc.original)) {
+				continue;
+			}
+			
 			// Check target block matches
-
-			if(!obc.originaltype.equalsIgnoreCase("MATERIAL") || Material.valueOf(obc.original) != event.getBlock().getType()) {
+			if(Material.valueOf(obc.original) != event.getBlock().getType()) {
 				continue;
 			}
 
@@ -53,19 +57,13 @@ public class OtherBlocksBlockListener extends BlockListener
 
 			// At this point, the tool and the target block match
 			successfulConversion = true;
-			try {
-				if(obc.droptype.equalsIgnoreCase("MATERIAL")) {
-					// Special exemption for AIR - breaks the map! :-/
-					if(Material.valueOf(obc.dropped) != Material.AIR) {
-						target.getWorld().dropItemNaturally(location, new ItemStack(Material.valueOf(obc.dropped), obc.quantity, obc.color));
-					}
-				} else if(obc.droptype.equalsIgnoreCase("CREATURE")) {
-					target.getWorld().spawnCreature(new Location(target.getWorld(), location.getX() + 0.5, location.getY() + 1, location.getZ() + 0.5), CreatureType.valueOf(obc.dropped));
-				} else {
-					throw new Exception("InvalidDropType");
+			if(!parent.isCreature(obc.dropped)) {
+				// Special exemption for AIR - breaks the map! :-/
+				if(Material.valueOf(obc.dropped) != Material.AIR) {
+					target.getWorld().dropItemNaturally(location, new ItemStack(Material.valueOf(obc.dropped), obc.quantity, obc.color));
 				}
-			} catch(Exception e) {
-				e.printStackTrace();
+			} else {
+				target.getWorld().spawnCreature(new Location(target.getWorld(), location.getX() + 0.5, location.getY() + 1, location.getZ() + 0.5), CreatureType.valueOf(obc.dropped.substring(9)));
 			}
 			maxDamage = (maxDamage < obc.damage) ? obc.damage : maxDamage;
 		}
