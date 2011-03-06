@@ -35,6 +35,10 @@ public class OtherBlocks extends JavaPlugin
 		verbosity = 2;
 		pri = Priority.Lowest;
 	}
+	
+	public boolean isCreature(String s) {
+		return s.startsWith("CREATURE_");
+	}
 
 	public void onDisable()
 	{
@@ -103,12 +107,10 @@ public class OtherBlocks extends JavaPlugin
 						// Source block
 						String originalString = s;
 						
-						if(originalString.length() > 9 && originalString.substring(0, 9).equalsIgnoreCase("CREATURE_")) {
-							bt.original = CreatureType.valueOf(originalString.substring(9)).toString();
-							bt.originaltype = "CREATURE";
+						if(isCreature(originalString)) {
+							bt.original = "CREATURE_" + CreatureType.valueOf(originalString.substring(9)).toString();
 						} else {
 							bt.original = Material.valueOf(originalString).toString();
-							bt.originaltype = "MATERIAL";
 						}
 
 						// Tool used
@@ -145,12 +147,10 @@ public class OtherBlocks extends JavaPlugin
 							dropString = "INK_SACK";
 						}
 
-						if(dropString.length() > 9 && dropString.substring(0, 9).equalsIgnoreCase("CREATURE_")) {
-							bt.dropped = CreatureType.valueOf(dropString.substring(9)).toString();
-							bt.droptype = "CREATURE";
+						if(isCreature(dropString)) {
+							bt.dropped = "CREATURE_" + CreatureType.valueOf(dropString.substring(9)).toString();
 						} else {
 							bt.dropped = Material.valueOf(dropString).toString();
-							bt.droptype = "MATERIAL";
 						}
 
 						// Dropped color

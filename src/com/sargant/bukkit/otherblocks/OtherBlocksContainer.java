@@ -7,10 +7,9 @@ import org.bukkit.Material;
 public class OtherBlocksContainer
 {
 	public String original;
-	public String originaltype;
 	public String dropped;
-	public String droptype;
 	public List<Material> tool;
+	public List<String> worlds;
 	public Integer quantity;
 	public Integer damage;
 	public Double chance;

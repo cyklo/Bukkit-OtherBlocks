@@ -66,7 +66,7 @@ public class OtherBlocksEntityListener extends EntityListener
 			}
 
 			// Check target matches
-			if(!obc.originaltype.equalsIgnoreCase("CREATURE") || CreatureType.valueOf(obc.original) != victimType) {
+			if(!parent.isCreature(obc.original) || CreatureType.valueOf(obc.original.substring(9)) != victimType) {
 				continue;
 			}
 
@@ -78,20 +78,14 @@ public class OtherBlocksEntityListener extends EntityListener
 			event.getDrops().clear();
 			Location location = victim.getLocation();
 			
-			try {
-				if(obc.droptype.equalsIgnoreCase("MATERIAL")) {
-					// Special exemption for AIR - breaks the map! :-/
-					if(Material.valueOf(obc.dropped) != Material.AIR) {
-						victim.getWorld().dropItemNaturally(location, new ItemStack(Material.valueOf(obc.dropped), obc.quantity, obc.color));
-					}
-				} else if(obc.droptype.equalsIgnoreCase("CREATURE")) {
-					victim.getWorld().spawnCreature(victim.getLocation(), CreatureType.valueOf(obc.dropped));
-				} else {
-					throw new Exception("InvalidDropType");
+			if(!parent.isCreature(obc.dropped)) {
+				// Special exemption for AIR - breaks the map! :-/
+				if(Material.valueOf(obc.dropped) != Material.AIR) {
+					victim.getWorld().dropItemNaturally(location, new ItemStack(Material.valueOf(obc.dropped), obc.quantity, obc.color));
 				}
-			} catch(Exception e) {
-				e.printStackTrace();
-			}	
+			} else  {
+				victim.getWorld().spawnCreature(victim.getLocation(), CreatureType.valueOf(obc.dropped.substring(9)));
+			} 
 		}
 	}
 }
