@@ -11,7 +11,8 @@ otherblocks:
 # Configuration blocks are set out as followed:
 #
 # NAME_OF_ORIGINAL_BLOCK:
-#     - tool: NAME_OF_TOOL (or ALL for all tools)
+#     - tool: NAME_OF_TOOL (or ALL for all tools. Accepts lists like [toola, toolb])
+#       world: WHICH_WORLD (optional. Accepts lists like [worlda, worldb])
 #       drop: NAME_OF_NEW_DROP
 #       color: COLOUR_OF_NEW_BLOCK (default WHITE, only applies to WOOL/DYE/INK_SACK drops)
 #       quantity: AMOUNT_OF_NEW_DROP (optional, default 1)

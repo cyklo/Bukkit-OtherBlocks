@@ -33,6 +33,11 @@ public class OtherBlocksBlockListener extends BlockListener
 
 		for(OtherBlocksContainer obc : parent.transformList) {
 
+			// Check worlds match
+			if(!obc.worlds.contains(null) && !obc.worlds.contains(target.getWorld().getName())) {
+				continue;
+			}
+			
 			// Check held item matches
 			if(!obc.tool.contains(null) && !obc.tool.contains(tool.getType())) {
 				continue;

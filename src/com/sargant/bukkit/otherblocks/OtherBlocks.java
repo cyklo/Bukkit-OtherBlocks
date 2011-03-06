@@ -189,6 +189,33 @@ public class OtherBlocks extends JavaPlugin
 						} catch(NumberFormatException ex) {
 							bt.chance = 100.0;
 						}
+						
+						// Applicable worlds
+						// Tool used
+						bt.worlds = new ArrayList<String>();
+
+						if(m.get("world") == null) {
+							bt.worlds.add((String) null);
+						}
+						else if(m.get("world") instanceof String) {
+
+							String worldString = (String) m.get("world");
+
+							if(worldString.equalsIgnoreCase("ALL") || worldString.equalsIgnoreCase("ANY")) {
+								bt.worlds.add((String) null);
+							} else {
+								bt.worlds.add(worldString);
+							}
+
+						} else if (m.get("world") instanceof List<?>) {
+
+							for(Object listWorld : (List<?>) m.get("world")) {
+								bt.worlds.add((String) listWorld);
+							}
+
+						} else {
+							throw new Exception("Not a recognizable type");
+						}
 
 					} catch(Throwable ex) {
 						if(verbosity > 1) {
