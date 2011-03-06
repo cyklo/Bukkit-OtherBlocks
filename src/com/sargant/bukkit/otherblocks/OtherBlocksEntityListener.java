@@ -66,7 +66,7 @@ public class OtherBlocksEntityListener extends EntityListener
 			}
 
 			// Check target matches
-			if(!parent.isCreature(obc.original) || CreatureType.valueOf(obc.original.substring(9)) != victimType) {
+			if(!parent.isCreature(obc.original) || CreatureType.valueOf(parent.creatureName(obc.original)) != victimType) {
 				continue;
 			}
 
@@ -84,7 +84,7 @@ public class OtherBlocksEntityListener extends EntityListener
 					victim.getWorld().dropItemNaturally(location, new ItemStack(Material.valueOf(obc.dropped), obc.quantity, obc.color));
 				}
 			} else  {
-				victim.getWorld().spawnCreature(victim.getLocation(), CreatureType.valueOf(obc.dropped.substring(9)));
+				victim.getWorld().spawnCreature(victim.getLocation(), CreatureType.valueOf(parent.creatureName(obc.dropped)));
 			} 
 		}
 	}

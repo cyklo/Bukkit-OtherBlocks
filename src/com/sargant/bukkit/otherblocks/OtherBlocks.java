@@ -39,6 +39,10 @@ public class OtherBlocks extends JavaPlugin
 	public boolean isCreature(String s) {
 		return s.startsWith("CREATURE_");
 	}
+	
+	public String creatureName(String s) {
+		return (isCreature(s) ? s.substring(9) :s);
+	}
 
 	public void onDisable()
 	{
@@ -108,7 +112,7 @@ public class OtherBlocks extends JavaPlugin
 						String originalString = s;
 						
 						if(isCreature(originalString)) {
-							bt.original = "CREATURE_" + CreatureType.valueOf(originalString.substring(9)).toString();
+							bt.original = "CREATURE_" + CreatureType.valueOf(creatureName(originalString)).toString();
 						} else {
 							bt.original = Material.valueOf(originalString).toString();
 						}
@@ -148,7 +152,7 @@ public class OtherBlocks extends JavaPlugin
 						}
 
 						if(isCreature(dropString)) {
-							bt.dropped = "CREATURE_" + CreatureType.valueOf(dropString.substring(9)).toString();
+							bt.dropped = "CREATURE_" + CreatureType.valueOf(creatureName(dropString)).toString();
 						} else {
 							bt.dropped = Material.valueOf(dropString).toString();
 						}
@@ -201,9 +205,9 @@ public class OtherBlocks extends JavaPlugin
 					if(verbosity > 1) {
 						log.info(getDescription().getName() + ": " +
 								(bt.tool.contains(null) ? "ALL TOOLS" : (bt.tool.size() == 1 ? bt.tool.get(0).toString() : bt.tool.toString())) + " + " +
-								bt.original.toString() + " now drops " +
+								creatureName(bt.original) + " now drops " +
 								(bt.quantity != 1 ? bt.quantity.toString() + "x " : "") +
-								bt.dropped.toString() +
+								creatureName(bt.dropped) +
 								(bt.chance < 100 ? " with " + bt.chance.toString() + "% chance" : ""));
 					}
 				}

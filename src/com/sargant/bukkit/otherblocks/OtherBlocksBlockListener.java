@@ -63,7 +63,7 @@ public class OtherBlocksBlockListener extends BlockListener
 					target.getWorld().dropItemNaturally(location, new ItemStack(Material.valueOf(obc.dropped), obc.quantity, obc.color));
 				}
 			} else {
-				target.getWorld().spawnCreature(new Location(target.getWorld(), location.getX() + 0.5, location.getY() + 1, location.getZ() + 0.5), CreatureType.valueOf(obc.dropped.substring(9)));
+				target.getWorld().spawnCreature(new Location(target.getWorld(), location.getX() + 0.5, location.getY() + 1, location.getZ() + 0.5), CreatureType.valueOf(parent.creatureName(obc.dropped)));
 			}
 			maxDamage = (maxDamage < obc.damage) ? obc.damage : maxDamage;
 		}
