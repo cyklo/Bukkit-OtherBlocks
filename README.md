@@ -10,6 +10,6 @@ Downloading
 
 Please note that OtherBlocks contains submodules, so to checkout:
 
-  git clone git://github.com/cyklo/Bukkit-OtherBlocks.git
-  cd Bukkit-OtherBlocks
-  git submodule update --init
+    git clone git://github.com/cyklo/Bukkit-OtherBlocks.git
+    cd Bukkit-OtherBlocks
+    git submodule update --init
