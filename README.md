@@ -1,9 +1,12 @@
 OtherBlocks
 ===========
 
-OtherBlocks is a plugin for the Minecraft Bukkit API that lets you completely customize what blocks and dead mobs drop when they are destroyed. Apples from leaves, no more broken glass, you name it!
+OtherBlocks is a plugin for the Minecraft Bukkit API that lets you completely
+customize what blocks and dead mobs drop when they are destroyed. Apples from
+leaves, no more broken glass, you name it!
 
-The related discussion thread for this plugin is located at <http://forums.bukkit.org/threads/4072/>
+The related discussion thread for this plugin is located at
+<http://forums.bukkit.org/threads/4072/>
 
 Downloading
 -----------
@@ -17,7 +20,8 @@ Please note that OtherBlocks contains submodules, so to checkout:
 Building
 --------
 
-An Ant makefile is included. Building this project requires a copy of `bukkit.jar` in the top level directory.
+An Ant makefile is included. Building this project requires a copy of
+`bukkit.jar` in the top level directory.
 
     cd Bukkit-OtherBlocks
     wget -O bukkit.jar http://ci.bukkit.org/job/dev-Bukkit/lastSuccessfulBuild/artifact/target/bukkit-0.0.1-SNAPSHOT.jar
