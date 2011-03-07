@@ -8,7 +8,9 @@ leaves, no more broken glass, you name it!
 The related discussion thread for this plugin is located at
 <http://forums.bukkit.org/threads/4072/>
 
-Downloading
+Please [see the wiki](https://github.com/cyklo/Bukkit-OtherBlocks/wiki) for details on how to set up OtherBlocks
+
+Building from source
 -----------
 
 Please note that OtherBlocks contains submodules, so to checkout:
@@ -17,11 +19,8 @@ Please note that OtherBlocks contains submodules, so to checkout:
     cd Bukkit-OtherBlocks
     git submodule update --init
 
-Building
---------
-
-An Ant makefile is included. Building this project requires a copy of
-`bukkit.jar` in the top level directory.
+This projects includes an Ant make. To build, you need a copy of `bukkit.jar`
+in the top-level folder. Then run `ant; ant jar` like so:
 
     cd Bukkit-OtherBlocks
     wget -O bukkit.jar http://ci.bukkit.org/job/dev-Bukkit/lastSuccessfulBuild/artifact/target/bukkit-0.0.1-SNAPSHOT.jar
