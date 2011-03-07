@@ -1,7 +1,7 @@
 OtherBlocks
 ===========
 
-This is a plugin for the Bukkit, the Minecraft server mod.
+OtherBlocks is a plugin for the Minecraft Bukkit API that lets you completely customize what blocks and dead mobs drop when they are destroyed. Apples from leaves, no more broken glass, you name it!
 
 The related discussion thread for this plugin is located at <http://forums.bukkit.org/threads/4072/>
 
