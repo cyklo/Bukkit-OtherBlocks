@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="otherblocks">
+	
+	<property name="bukkit-location" value="bukkit.jar"/>
+	<property name="output-jar" value="otherblocks.jar"/>
+	
+    <property name="debuglevel" value="source,lines"/>
+	
+    <path id="classpath">
+        <pathelement location="bin"/>
+        <pathelement location="${bukkit-location}"/>
+    </path>
+	
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy file="src/plugin.yml" todir="bin" />
+    </target>
+	
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+	
+    <target depends="init" name="build">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin">
+            <src path="src"/>
+            <src path="lib/common/src"/>
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+	
+	<target name="jar">
+	    <jar destfile="${output-jar}" basedir="bin" />
+	</target>
+</project>
