@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="build" name="otherblocks">
 	
-	<property name="bukkit-location" value="bukkit.jar"/>
-	<property name="output-jar" value="${ant.project.name}.jar"/>
+    <property name="bukkit-location" value="bukkit.jar"/>
+    <property name="output-jar" value="${ant.project.name}.jar"/>
 	
     <property name="debuglevel" value="source,lines"/>
 	
@@ -29,7 +29,15 @@
         </javac>
     </target>
 	
-	<target name="jar">
-	    <jar destfile="${output-jar}" basedir="bin" />
-	</target>
+    <target name="jar">
+        <jar destfile="${output-jar}" basedir="bin" />
+    </target>
+
+    <target name="dist" depends="clean,build,jar">
+        <fail unless="version" message="You need to specify a version number"/>
+        <property name="tarfile" value="${ant.project.name}_${version}.tar"/>
+        <tar destfile="${tarfile}" basedir="." includes="${output-jar} ${ant.project.name}/*" />
+        <gzip destfile="${tarfile}.gz" src="${tarfile}" />
+        <delete file="${tarfile}"/>
+    </target>
 </project>
