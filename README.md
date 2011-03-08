@@ -20,9 +20,10 @@ Please note that OtherBlocks contains submodules, so to checkout:
     git submodule update --init
 
 This projects includes an Ant make. To build, you need a copy of `bukkit.jar`
-in the top-level folder. Then run `ant; ant jar` like so:
+in the top-level folder. Then run `ant clean && ant build && ant jar` like so:
 
     cd Bukkit-OtherBlocks
     wget -O bukkit.jar http://ci.bukkit.org/job/dev-Bukkit/lastSuccessfulBuild/artifact/target/bukkit-0.0.1-SNAPSHOT.jar
-    ant
+    ant clean
+    ant build
     ant jar
