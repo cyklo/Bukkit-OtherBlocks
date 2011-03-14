@@ -27,6 +27,21 @@ public class OtherBlocksBlockListener extends BlockListener
 		return (haystack.contains(null) || haystack.contains(needle));
 	}
 	
+	private static void performDrop(Location target, OtherBlocksContainer dropData) {
+		
+		if(!OtherBlocks.isCreature(dropData.dropped)) {
+			// Special exemption for AIR - breaks the map! :-/
+			if(Material.valueOf(dropData.dropped) != Material.AIR) {
+				target.getWorld().dropItemNaturally(target, new ItemStack(Material.valueOf(dropData.dropped), dropData.quantity, dropData.color));
+			}
+		} else {
+			target.getWorld().spawnCreature(
+					new Location(target.getWorld(), target.getX() + 0.5, target.getY() + 1, target.getZ() + 0.5), 
+					CreatureType.valueOf(OtherBlocks.creatureName(dropData.dropped))
+					);
+		}
+	}
+	
 	@Override
 	public void onLeavesDecay(LeavesDecayEvent event) {
 		
@@ -46,19 +61,9 @@ public class OtherBlocksBlockListener extends BlockListener
 			// Check RNG is OK
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
 			
-			Location location = new Location(target.getWorld(), target.getX(), target.getY(), target.getZ());
-			
 			// Now drop OK
 			successfulConversion = true;
-			
-			if(!OtherBlocks.isCreature(obc.dropped)) {
-				// Special exemption for AIR - breaks the map! :-/
-				if(Material.valueOf(obc.dropped) != Material.AIR) {
-					target.getWorld().dropItem(location, new ItemStack(Material.valueOf(obc.dropped), obc.quantity, obc.color));
-				}
-			} else {
-				target.getWorld().spawnCreature(new Location(target.getWorld(), location.getX() + 0.5, location.getY() + 1, location.getZ() + 0.5), CreatureType.valueOf(OtherBlocks.creatureName(obc.dropped)));
-			}
+			performDrop(target.getLocation(), obc);
 		}
 		
 		if(successfulConversion) {
@@ -100,18 +105,9 @@ public class OtherBlocksBlockListener extends BlockListener
 			// Check probability is great than the RNG
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
 
-			Location location = new Location(target.getWorld(), target.getX(), target.getY(), target.getZ());
-
 			// At this point, the tool and the target block match
 			successfulConversion = true;
-			if(!OtherBlocks.isCreature(obc.dropped)) {
-				// Special exemption for AIR - breaks the map! :-/
-				if(Material.valueOf(obc.dropped) != Material.AIR) {
-					target.getWorld().dropItemNaturally(location, new ItemStack(Material.valueOf(obc.dropped), obc.quantity, obc.color));
-				}
-			} else {
-				target.getWorld().spawnCreature(new Location(target.getWorld(), location.getX() + 0.5, location.getY() + 1, location.getZ() + 0.5), CreatureType.valueOf(OtherBlocks.creatureName(obc.dropped)));
-			}
+			performDrop(target.getLocation(), obc);
 			maxDamage = (maxDamage < obc.damage) ? obc.damage : maxDamage;
 		}
 
