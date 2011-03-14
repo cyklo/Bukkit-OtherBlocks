@@ -36,11 +36,11 @@ public class OtherBlocks extends JavaPlugin
 		pri = Priority.Lowest;
 	}
 	
-	public boolean isCreature(String s) {
+	public static boolean isCreature(String s) {
 		return s.startsWith("CREATURE_");
 	}
 	
-	public String creatureName(String s) {
+	public static String creatureName(String s) {
 		return (isCreature(s) ? s.substring(9) :s);
 	}
 

@@ -44,7 +44,7 @@ public class OtherBlocksBlockListener extends BlockListener
 			}
 			
 			// Check target block is not a creature
-			if(parent.isCreature(obc.original)) {
+			if(OtherBlocks.isCreature(obc.original)) {
 				continue;
 			}
 			
@@ -62,13 +62,13 @@ public class OtherBlocksBlockListener extends BlockListener
 
 			// At this point, the tool and the target block match
 			successfulConversion = true;
-			if(!parent.isCreature(obc.dropped)) {
+			if(!OtherBlocks.isCreature(obc.dropped)) {
 				// Special exemption for AIR - breaks the map! :-/
 				if(Material.valueOf(obc.dropped) != Material.AIR) {
 					target.getWorld().dropItemNaturally(location, new ItemStack(Material.valueOf(obc.dropped), obc.quantity, obc.color));
 				}
 			} else {
-				target.getWorld().spawnCreature(new Location(target.getWorld(), location.getX() + 0.5, location.getY() + 1, location.getZ() + 0.5), CreatureType.valueOf(parent.creatureName(obc.dropped)));
+				target.getWorld().spawnCreature(new Location(target.getWorld(), location.getX() + 0.5, location.getY() + 1, location.getZ() + 0.5), CreatureType.valueOf(OtherBlocks.creatureName(obc.dropped)));
 			}
 			maxDamage = (maxDamage < obc.damage) ? obc.damage : maxDamage;
 		}
