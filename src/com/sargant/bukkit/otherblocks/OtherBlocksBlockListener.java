@@ -26,6 +26,48 @@ public class OtherBlocksBlockListener extends BlockListener
 	private static boolean containsValidString(String needle, List<String> haystack) {
 		return (haystack.contains(null) || haystack.contains(needle));
 	}
+	
+	@Override
+	public void onLeavesDecay(LeavesDecayEvent event) {
+		
+		boolean successfulConversion = false;
+		Block target = event.getBlock();
+		
+		if(event.isCancelled()) return;
+		
+		for(OtherBlocksContainer obc : parent.transformList) {
+			
+			// Check it is leaf decay
+			if(!OtherBlocks.isLeafDecay(obc.original)) continue;
+			
+			// Check worlds match
+			if(!containsValidString(target.getWorld().getName(), obc.worlds)) continue;
+			
+			// Check RNG is OK
+			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
+			
+			Location location = new Location(target.getWorld(), target.getX(), target.getY(), target.getZ());
+			
+			// Now drop OK
+			successfulConversion = true;
+			
+			if(!OtherBlocks.isCreature(obc.dropped)) {
+				// Special exemption for AIR - breaks the map! :-/
+				if(Material.valueOf(obc.dropped) != Material.AIR) {
+					target.getWorld().dropItem(location, new ItemStack(Material.valueOf(obc.dropped), obc.quantity, obc.color));
+				}
+			} else {
+				target.getWorld().spawnCreature(new Location(target.getWorld(), location.getX() + 0.5, location.getY() + 1, location.getZ() + 0.5), CreatureType.valueOf(OtherBlocks.creatureName(obc.dropped)));
+			}
+		}
+		
+		if(successfulConversion) {
+			// Convert the target block
+			event.setCancelled(true);
+			target.setType(Material.AIR);
+		}
+		
+	}
 
 	@Override
 	public void onBlockBreak(BlockBreakEvent event)
@@ -48,6 +90,9 @@ public class OtherBlocksBlockListener extends BlockListener
 			
 			// Check target block is not a creature
 			if(OtherBlocks.isCreature(obc.original)) continue;
+			
+			// Check isn't leaf decay
+			if(OtherBlocks.isLeafDecay(obc.original)) continue;
 			
 			// Check target block matches
 			if(Material.valueOf(obc.original) != event.getBlock().getType()) continue;

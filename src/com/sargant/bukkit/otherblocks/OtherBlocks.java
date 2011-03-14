@@ -40,6 +40,10 @@ public class OtherBlocks extends JavaPlugin
 		return s.startsWith("CREATURE_");
 	}
 	
+	public static boolean isLeafDecay(String s) {
+		return s.equalsIgnoreCase("SPECIAL_LEAFDECAY");
+	}
+	
 	public static String creatureName(String s) {
 		return (isCreature(s) ? s.substring(9) :s);
 	}
@@ -113,6 +117,8 @@ public class OtherBlocks extends JavaPlugin
 						
 						if(isCreature(originalString)) {
 							bt.original = "CREATURE_" + CreatureType.valueOf(creatureName(originalString)).toString();
+						} else if(isLeafDecay(originalString)) {
+							bt.original = originalString;
 						} else {
 							bt.original = Material.valueOf(originalString).toString();
 						}
@@ -120,7 +126,11 @@ public class OtherBlocks extends JavaPlugin
 						// Tool used
 						bt.tool = new ArrayList<Material>();
 
-						if(m.get("tool") instanceof String) {
+						if(isLeafDecay(bt.original)) {
+							
+							bt.tool.add((Material) null);
+							
+						} else if(m.get("tool") instanceof String) {
 
 							String toolString = (String) m.get("tool");
 
@@ -244,6 +254,7 @@ public class OtherBlocks extends JavaPlugin
 
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, pri, this);
+		pm.registerEvent(Event.Type.LEAVES_DECAY, blockListener, pri, this);
 		pm.registerEvent(Event.Type.ENTITY_DEATH, entityListener, pri, this);
 		pm.registerEvent(Event.Type.ENTITY_DAMAGED, entityListener, pri, this);
 
