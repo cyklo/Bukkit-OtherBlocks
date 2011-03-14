@@ -9,8 +9,6 @@ import org.bukkit.entity.CreatureType;
 import org.bukkit.event.block.*;
 import org.bukkit.inventory.ItemStack;
 
-import com.sargant.bukkit.common.*;
-
 public class OtherBlocksBlockListener extends BlockListener
 {
 	private OtherBlocks parent;
@@ -118,15 +116,13 @@ public class OtherBlocksBlockListener extends BlockListener
 			target.setType(Material.AIR);
 
 			// Check the tool can take wear and tear
-			if(Common.getFixedMaxDurability(tool.getType()) < 0 || tool.getType().isBlock()) {
-				return;
-			}
+			if(tool.getType().getMaxDurability() < 0 || tool.getType().isBlock()) return;
 
 			// Now adjust the durability of the held tool
 			tool.setDurability((short) (tool.getDurability() + maxDamage));
 
 			// Manually check whether the tool has exceed its durability limit
-			if(tool.getDurability() >= Common.getFixedMaxDurability(tool.getType())) {
+			if(tool.getDurability() >= tool.getType().getMaxDurability()) {
 				event.getPlayer().setItemInHand(null);
 			}
 		}
