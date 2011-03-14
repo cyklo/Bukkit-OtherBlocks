@@ -1,6 +1,8 @@
 package com.sargant.bukkit.otherblocks;
 
 
+import java.util.List;
+
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.CreatureType;
@@ -13,18 +15,23 @@ public class OtherBlocksBlockListener extends BlockListener
 {
 	private OtherBlocks parent;
 
-	public OtherBlocksBlockListener(OtherBlocks instance)
-	{
+	public OtherBlocksBlockListener(OtherBlocks instance) {
 		parent = instance;
+	}
+	
+	private static boolean containsValidMaterial(Material needle, List<Material> haystack) {
+		return (haystack.contains(null) || haystack.contains(needle));
+	}
+	
+	private static boolean containsValidString(String needle, List<String> haystack) {
+		return (haystack.contains(null) || haystack.contains(needle));
 	}
 
 	@Override
 	public void onBlockBreak(BlockBreakEvent event)
 	{
 
-		if (event.isCancelled()) {
-			return;
-		}
+		if (event.isCancelled()) return;
 
 		Block target  = event.getBlock();
 		ItemStack tool = event.getPlayer().getItemInHand();
@@ -34,29 +41,19 @@ public class OtherBlocksBlockListener extends BlockListener
 		for(OtherBlocksContainer obc : parent.transformList) {
 
 			// Check worlds match
-			if(!obc.worlds.contains(null) && !obc.worlds.contains(target.getWorld().getName())) {
-				continue;
-			}
+			if(!containsValidString(target.getWorld().getName(), obc.worlds)) continue;
 			
 			// Check held item matches
-			if(!obc.tool.contains(null) && !obc.tool.contains(tool.getType())) {
-				continue;
-			}
+			if(!containsValidMaterial(tool.getType(), obc.tool)) continue;
 			
 			// Check target block is not a creature
-			if(OtherBlocks.isCreature(obc.original)) {
-				continue;
-			}
+			if(OtherBlocks.isCreature(obc.original)) continue;
 			
 			// Check target block matches
-			if(Material.valueOf(obc.original) != event.getBlock().getType()) {
-				continue;
-			}
+			if(Material.valueOf(obc.original) != event.getBlock().getType()) continue;
 
 			// Check probability is great than the RNG
-			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)){
-				continue;
-			}
+			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
 
 			Location location = new Location(target.getWorld(), target.getX(), target.getY(), target.getZ());
 
