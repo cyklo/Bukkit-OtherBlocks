@@ -178,9 +178,8 @@ public class OtherBlocks extends JavaPlugin
 						else if(dropString.equalsIgnoreCase("INK_SACK")) {
 							bt.color = Common.getDyeColor(DyeColor.valueOf(dropColor));
 						}
-						else
-						{
-							bt.color = 0;
+						else {
+							bt.color = Short.valueOf(dropColor);
 						}
 
 						// Dropped quantity
