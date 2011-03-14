@@ -36,8 +36,6 @@ public class OtherBlocksEntityListener extends EntityListener
 		
 		OtherBlocksDamager d = new OtherBlocksDamager();
 		
-		d.damager = damager;
-		d.target = event.getEntity();
 		d.tool = damager.getItemInHand().getType();
 		
 		parent.damagerList.put(event.getEntity(), d);
