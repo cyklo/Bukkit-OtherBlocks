@@ -51,18 +51,6 @@ public class OtherBlocks extends JavaPlugin
 		verbosity = 2;
 		pri = Priority.Lowest;
 	}
-	
-	public static boolean isCreature(String s) {
-		return s.startsWith("CREATURE_");
-	}
-	
-	public static boolean isLeafDecay(String s) {
-		return s.equalsIgnoreCase("SPECIAL_LEAFDECAY");
-	}
-	
-	public static String creatureName(String s) {
-		return (isCreature(s) ? s.substring(9) :s);
-	}
 
 	public void onDisable()
 	{
@@ -274,5 +262,21 @@ public class OtherBlocks extends JavaPlugin
 		pm.registerEvent(Event.Type.ENTITY_DAMAGED, entityListener, pri, this);
 
 		log.info(getDescription().getName() + " " + getDescription().getVersion() + " loaded.");
+	}
+	
+	//
+	// Short functions
+	//
+	
+	public static boolean isCreature(String s) {
+		return s.startsWith("CREATURE_");
+	}
+	
+	public static boolean isLeafDecay(String s) {
+		return s.equalsIgnoreCase("SPECIAL_LEAFDECAY");
+	}
+	
+	public static String creatureName(String s) {
+		return (isCreature(s) ? s.substring(9) :s);
 	}
 }
