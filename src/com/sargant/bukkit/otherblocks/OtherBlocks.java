@@ -28,7 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 
-import com.sargant.bukkit.common.Common;
+import com.sargant.bukkit.common.*;
 
 public class OtherBlocks extends JavaPlugin
 {
@@ -76,10 +76,10 @@ public class OtherBlocks extends JavaPlugin
 		}
 
 		// Load in the values from the configuration file
-		verbosity = Common.getVerbosity(this);
-		pri = Common.getPriority(this);
+		verbosity = CommonPlugin.getVerbosity(this);
+		pri = CommonPlugin.getPriority(this);
 		
-		List <String> keys = Common.getRootKeys(this);
+		List <String> keys = CommonPlugin.getRootKeys(this);
 		
 		if(keys == null) {
 			log.warning(getDescription().getName() + ": no parent key not found");
@@ -178,10 +178,10 @@ public class OtherBlocks extends JavaPlugin
 							bt.color = 0;
 						}
 						else if(dropString.equalsIgnoreCase("WOOL")) {
-							bt.color = Common.getWoolColor(DyeColor.valueOf(dropColor));
+							bt.color = CommonMaterial.getWoolColor(DyeColor.valueOf(dropColor));
 						}
 						else if(dropString.equalsIgnoreCase("INK_SACK")) {
-							bt.color = Common.getDyeColor(DyeColor.valueOf(dropColor));
+							bt.color = CommonMaterial.getDyeColor(DyeColor.valueOf(dropColor));
 						}
 						else {
 							bt.color = Short.valueOf(dropColor);

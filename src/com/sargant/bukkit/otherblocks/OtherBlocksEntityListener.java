@@ -66,7 +66,7 @@ public class OtherBlocksEntityListener extends EntityListener
 		
 		Material weapon = parent.damagerList.get(event.getEntity()).tool;
 		Entity victim = event.getEntity();
-		CreatureType victimType = Common.getCreatureType(victim);
+		CreatureType victimType = CommonEntity.getCreatureType(victim);
 		
 		parent.damagerList.remove(event.getEntity());
 		
