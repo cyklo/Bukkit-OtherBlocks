@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.CreatureType;
 import org.bukkit.event.block.*;
 import org.bukkit.inventory.ItemStack;
 
@@ -38,21 +37,6 @@ public class OtherBlocksBlockListener extends BlockListener
 	
 	private static boolean containsValidString(String needle, List<String> haystack) {
 		return (haystack.contains(null) || haystack.contains(needle));
-	}
-	
-	private static void performDrop(Location target, OtherBlocksContainer dropData) {
-		
-		if(!OtherBlocks.isCreature(dropData.dropped)) {
-			// Special exemption for AIR - breaks the map! :-/
-			if(Material.valueOf(dropData.dropped) != Material.AIR) {
-				target.getWorld().dropItemNaturally(target, new ItemStack(Material.valueOf(dropData.dropped), dropData.quantity, dropData.color));
-			}
-		} else {
-			target.getWorld().spawnCreature(
-					new Location(target.getWorld(), target.getX() + 0.5, target.getY() + 1, target.getZ() + 0.5), 
-					CreatureType.valueOf(OtherBlocks.creatureName(dropData.dropped))
-					);
-		}
 	}
 	
 	@Override
@@ -76,7 +60,7 @@ public class OtherBlocksBlockListener extends BlockListener
 			
 			// Now drop OK
 			successfulConversion = true;
-			performDrop(target.getLocation(), obc);
+			OtherBlocks.performDrop(target.getLocation(), obc);
 		}
 		
 		if(successfulConversion) {
@@ -120,7 +104,7 @@ public class OtherBlocksBlockListener extends BlockListener
 
 			// At this point, the tool and the target block match
 			successfulConversion = true;
-			performDrop(target.getLocation(), obc);
+			OtherBlocks.performDrop(target.getLocation(), obc);
 			maxDamage = (maxDamage < obc.damage) ? obc.damage : maxDamage;
 		}
 

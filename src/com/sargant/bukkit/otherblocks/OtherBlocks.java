@@ -24,6 +24,7 @@ import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 
@@ -204,7 +205,6 @@ public class OtherBlocks extends JavaPlugin
 						}
 						
 						// Applicable worlds
-						// Tool used
 						bt.worlds = new ArrayList<String>();
 
 						if(m.get("world") == null) {
@@ -272,11 +272,34 @@ public class OtherBlocks extends JavaPlugin
 		return s.startsWith("CREATURE_");
 	}
 	
+	public static boolean isSynonymString(String s) {
+		return s.startsWith("ANY_");
+	}
+	
 	public static boolean isLeafDecay(String s) {
 		return s.equalsIgnoreCase("SPECIAL_LEAFDECAY");
 	}
 	
 	public static String creatureName(String s) {
 		return (isCreature(s) ? s.substring(9) :s);
+	}
+	
+	//
+	// Useful longer functions
+	//
+	
+	protected static void performDrop(Location target, OtherBlocksContainer dropData) {
+		
+		if(!isCreature(dropData.dropped)) {
+			// Special exemption for AIR - breaks the map! :-/
+			if(Material.valueOf(dropData.dropped) != Material.AIR) {
+				target.getWorld().dropItemNaturally(target, new ItemStack(Material.valueOf(dropData.dropped), dropData.quantity, dropData.color));
+			}
+		} else {
+			target.getWorld().spawnCreature(
+					new Location(target.getWorld(), target.getX() + 0.5, target.getY() + 1, target.getZ() + 0.5), 
+					CreatureType.valueOf(OtherBlocks.creatureName(dropData.dropped))
+					);
+		}
 	}
 }

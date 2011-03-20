@@ -19,7 +19,6 @@ package com.sargant.bukkit.otherblocks;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.*;
-import org.bukkit.inventory.ItemStack;
 
 import com.sargant.bukkit.common.*;
 
@@ -96,14 +95,7 @@ public class OtherBlocksEntityListener extends EntityListener
 			event.getDrops().clear();
 			Location location = victim.getLocation();
 			
-			if(!OtherBlocks.isCreature(obc.dropped)) {
-				// Special exemption for AIR - breaks the map! :-/
-				if(Material.valueOf(obc.dropped) != Material.AIR) {
-					victim.getWorld().dropItemNaturally(location, new ItemStack(Material.valueOf(obc.dropped), obc.quantity, obc.color));
-				}
-			} else  {
-				victim.getWorld().spawnCreature(victim.getLocation(), CreatureType.valueOf(OtherBlocks.creatureName(obc.dropped)));
-			} 
+			OtherBlocks.performDrop(location, obc);
 		}
 	}
 }
