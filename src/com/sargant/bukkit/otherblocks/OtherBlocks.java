@@ -174,17 +174,9 @@ public class OtherBlocks extends JavaPlugin
 						// Dropped color
 						String dropColor = String.valueOf(m.get("color"));
 
-						if(dropColor == "null") {
-							bt.color = 0;
-						}
-						else if(dropString.equalsIgnoreCase("WOOL")) {
-							bt.color = CommonMaterial.getWoolColor(DyeColor.valueOf(dropColor));
-						}
-						else if(dropString.equalsIgnoreCase("INK_SACK")) {
-							bt.color = CommonMaterial.getDyeColor(DyeColor.valueOf(dropColor));
-						}
+						if(dropColor == "null") bt.color = 0;
 						else {
-							bt.color = Short.valueOf(dropColor);
+							bt.color = CommonMaterial.getAnyDataShort(Material.valueOf(bt.dropped), dropColor);
 						}
 
 						// Dropped quantity
