@@ -23,6 +23,8 @@ import org.bukkit.block.Block;
 import org.bukkit.event.block.*;
 import org.bukkit.inventory.ItemStack;
 
+import com.sargant.bukkit.common.CommonMaterial;
+
 public class OtherBlocksBlockListener extends BlockListener
 {
 	private OtherBlocks parent;
@@ -84,20 +86,24 @@ public class OtherBlocksBlockListener extends BlockListener
 
 		for(OtherBlocksContainer obc : parent.transformList) {
 
+			// Check target block is not a creature
+			if(OtherBlocks.isCreature(obc.original)) continue;
+			
+			// Check isn't leaf decay
+			if(OtherBlocks.isLeafDecay(obc.original)) continue;
+
 			// Check worlds match
 			if(!containsValidString(target.getWorld().getName(), obc.worlds)) continue;
 			
 			// Check held item matches
 			if(!containsValidMaterial(tool.getType(), obc.tool)) continue;
 			
-			// Check target block is not a creature
-			if(OtherBlocks.isCreature(obc.original)) continue;
-			
-			// Check isn't leaf decay
-			if(OtherBlocks.isLeafDecay(obc.original)) continue;
-			
 			// Check target block matches
-			if(Material.valueOf(obc.original) != event.getBlock().getType()) continue;
+			if(CommonMaterial.isValidSynonym(obc.original)) {
+				if(false == CommonMaterial.isSynonymFor(obc.original, event.getBlock().getType())) continue;
+			} else {
+				if(Material.valueOf(obc.original) != event.getBlock().getType()) continue;
+			}
 			
 			// Check data value of block matches
 			if(obc.originalData != null && (obc.originalData != event.getBlock().getData())) continue;

@@ -126,6 +126,12 @@ public class OtherBlocks extends JavaPlugin
 							bt.original = "CREATURE_" + CreatureType.valueOf(creatureName(originalString)).toString();
 						} else if(isLeafDecay(originalString)) {
 							bt.original = originalString;
+						} else if(isSynonymString(originalString)) {
+							if(!CommonMaterial.isValidSynonym(originalString)) {
+								throw new IllegalArgumentException(originalString + " is not a valid synonym");
+							} else {
+								bt.original = originalString;
+							}
 						} else if(hasDataEmbedded(originalString)) {
 							bt.original = Material.valueOf(getDataEmbeddedBlockString(originalString)).toString();
 							bt.originalData = CommonMaterial.getAnyDataShort(Material.valueOf(bt.original), getDataEmbeddedDataString(originalString));
