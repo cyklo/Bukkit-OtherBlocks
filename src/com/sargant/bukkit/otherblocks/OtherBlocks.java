@@ -352,7 +352,9 @@ public class OtherBlocks extends JavaPlugin
 		        }
                 if(inven != null) {
                     for(ItemStack item : inven.getContents()) {
-                        target.getWorld().dropItemNaturally(target, item);
+                    	if(item.getType() != Material.AIR) {
+                    		target.getWorld().dropItemNaturally(target, item);
+                    	}
                     }
                 }
 			// Special exemption for AIR - breaks the map! :-/
