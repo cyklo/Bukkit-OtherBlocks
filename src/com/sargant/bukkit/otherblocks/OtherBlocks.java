@@ -120,7 +120,7 @@ public class OtherBlocks extends JavaPlugin
 						// Source block
 						String originalString = s;
 						bt.original = null;
-						bt.originalData = (Short) null;
+						bt.originalData = null;
 						
 						if(isCreature(originalString)) {
 							bt.original = "CREATURE_" + CreatureType.valueOf(creatureName(originalString)).toString();
