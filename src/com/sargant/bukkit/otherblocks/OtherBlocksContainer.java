@@ -18,14 +18,12 @@ package com.sargant.bukkit.otherblocks;
 
 import java.util.List;
 
-import org.bukkit.Material;
-
 public class OtherBlocksContainer
 {
 	public String original;
 	public Short originalData;
 	public String dropped;
-	public List<Material> tool;
+	public List<String> tool;
 	public List<String> worlds;
 	public Integer quantity;
 	public Integer damage;

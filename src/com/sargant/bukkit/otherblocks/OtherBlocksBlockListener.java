@@ -16,8 +16,6 @@
 
 package com.sargant.bukkit.otherblocks;
 
-import java.util.List;
-
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.*;
@@ -31,14 +29,6 @@ public class OtherBlocksBlockListener extends BlockListener
 
 	public OtherBlocksBlockListener(OtherBlocks instance) {
 		parent = instance;
-	}
-	
-	private static boolean containsValidMaterial(Material needle, List<Material> haystack) {
-		return (haystack.contains(null) || haystack.contains(needle));
-	}
-	
-	private static boolean containsValidString(String needle, List<String> haystack) {
-		return (haystack.contains(null) || haystack.contains(needle));
 	}
 	
 	@Override
@@ -55,7 +45,7 @@ public class OtherBlocksBlockListener extends BlockListener
 			if(!OtherBlocks.isLeafDecay(obc.original)) continue;
 			
 			// Check worlds match
-			if(!containsValidString(target.getWorld().getName(), obc.worlds)) continue;
+			if(!obc.worlds.contains(null) && !obc.worlds.contains(target.getWorld().getName())) continue;
 			
 			// Check RNG is OK
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
@@ -93,10 +83,10 @@ public class OtherBlocksBlockListener extends BlockListener
 			if(OtherBlocks.isLeafDecay(obc.original)) continue;
 
 			// Check worlds match
-			if(!containsValidString(target.getWorld().getName(), obc.worlds)) continue;
+			if(!obc.worlds.contains(null) && !obc.worlds.contains(target.getWorld().getName())) continue;
 			
 			// Check held item matches
-			if(!containsValidMaterial(tool.getType(), obc.tool)) continue;
+			if(!OtherBlocks.containsValidToolString(tool.getType().toString(), obc.tool)) continue;
 			
 			// Check target block matches
 			if(CommonMaterial.isValidSynonym(obc.original)) {

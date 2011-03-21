@@ -140,30 +140,35 @@ public class OtherBlocks extends JavaPlugin
 						}
 
 						// Tool used
-						bt.tool = new ArrayList<Material>();
+						bt.tool = new ArrayList<String>();
 
 						if(isLeafDecay(bt.original)) {
 							
-							bt.tool.add((Material) null);
+							bt.tool.add(null);
 							
 						} else if(m.get("tool") instanceof String) {
 
 							String toolString = (String) m.get("tool");
 
-							if(toolString.equalsIgnoreCase("DYE")) {
-								toolString = "INK_SACK";
-							}
+							if(toolString.equalsIgnoreCase("DYE")) toolString = "INK_SACK";
 
 							if(toolString.equalsIgnoreCase("ALL") || toolString.equalsIgnoreCase("ANY")) {
-								bt.tool.add((Material) null);
+								bt.tool.add(null);
+							} else if(CommonMaterial.isValidSynonym(toolString)) {
+								bt.tool.add(toolString);
 							} else {
-								bt.tool.add(Material.valueOf(toolString));
+								bt.tool.add(Material.valueOf(toolString).toString());
 							}
 
 						} else if (m.get("tool") instanceof List<?>) {
 
 							for(Object listTool : (List<?>) m.get("tool")) {
-								bt.tool.add(Material.valueOf((String) listTool));
+								String t = (String) listTool;
+								if(CommonMaterial.isValidSynonym(t)) {
+									bt.tool.add(t);
+								} else {
+									bt.tool.add(Material.valueOf(t).toString());
+								}
 							}
 
 						} else {
@@ -318,5 +323,19 @@ public class OtherBlocks extends JavaPlugin
 					CreatureType.valueOf(OtherBlocks.creatureName(dropData.dropped))
 					);
 		}
+	}
+	
+	protected static boolean containsValidToolString(String tool, List<String> haystack) {
+		if(haystack.contains(null)) return true;
+		
+		for(String haystack_straw : haystack) {
+			if(CommonMaterial.isValidSynonym(haystack_straw)
+					&& CommonMaterial.isSynonymFor(haystack_straw, Material.valueOf(tool))) {
+				return true;
+			} else if(haystack_straw.equals(tool)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

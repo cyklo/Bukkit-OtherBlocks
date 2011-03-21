@@ -73,14 +73,10 @@ public class OtherBlocksEntityListener extends EntityListener
 		for(OtherBlocksContainer obc : parent.transformList) {
 			
 			// Check world matches
-			if(!obc.worlds.contains(null) && !obc.worlds.contains(event.getEntity().getWorld().getName())) {
-				continue;
-			}
+			if(!obc.worlds.contains(null) && !obc.worlds.contains(event.getEntity().getWorld().getName())) continue;
 			
 			// Check held item matches
-			if(!obc.tool.contains(null) && !obc.tool.contains(weapon)) {
-				continue;
-			}
+			if(!OtherBlocks.containsValidToolString(weapon.toString(), obc.tool)) continue;
 
 			// Check target matches
 			if(!OtherBlocks.isCreature(obc.original) || CreatureType.valueOf(OtherBlocks.creatureName(obc.original)) != victimType) {
@@ -88,9 +84,7 @@ public class OtherBlocksEntityListener extends EntityListener
 			}
 
 			// Check probability is great than the RNG
-			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)){
-				continue;
-			}
+			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
 
 			event.getDrops().clear();
 			Location location = victim.getLocation();
