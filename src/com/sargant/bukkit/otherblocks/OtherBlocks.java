@@ -21,9 +21,13 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import org.bukkit.*;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Furnace;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
@@ -167,6 +171,8 @@ public class OtherBlocks extends JavaPlugin
 
 						if(isCreature(dropString)) {
 							bt.dropped = "CREATURE_" + CreatureType.valueOf(creatureName(dropString)).toString();
+						} else if(dropString.equalsIgnoreCase("CONTENTS")) {
+						    bt.dropped = "CONTENTS";
 						} else {
 							bt.dropped = Material.valueOf(dropString).toString();
 						}
@@ -291,8 +297,35 @@ public class OtherBlocks extends JavaPlugin
 	protected static void performDrop(Location target, OtherBlocksContainer dropData) {
 		
 		if(!isCreature(dropData.dropped)) {
+		    if(dropData.dropped.equalsIgnoreCase("CONTENTS")) {
+		        Inventory inven = null;
+                switch(Material.valueOf(dropData.original)) {
+	            case FURNACE:
+	            case BURNING_FURNACE:
+	                Furnace oven = (Furnace) target.getBlock().getState();
+	                // Next three lines make you lose one of the item being smelted
+	                // Feel free to remove if you don't like that. -- Celtic Minstrel
+	                inven = oven.getInventory();
+	                ItemStack cooking = inven.getItem(0); // first item is the item being smelted
+                    if(oven.getCookTime() > 0) cooking.setAmount(cooking.getAmount()-1);
+                    if(cooking.getAmount() <= 0) inven.setItem(0, null);
+                break;
+	            case DISPENSER:
+	                Dispenser trap = (Dispenser) target.getBlock().getState();
+	                inven = trap.getInventory();
+                break;
+	            case CHEST: // Technically not needed, but included for completeness
+	                Chest box = (Chest) target.getBlock().getState();
+	                inven = box.getInventory();
+                break;
+		        }
+                if(inven != null) {
+                    for(ItemStack item : inven.getContents()) {
+                        target.getWorld().dropItemNaturally(target, item);
+                    }
+                }
 			// Special exemption for AIR - breaks the map! :-/
-			if(Material.valueOf(dropData.dropped) != Material.AIR) {
+		    } else if(Material.valueOf(dropData.dropped) != Material.AIR) {
 				target.getWorld().dropItemNaturally(target, new ItemStack(Material.valueOf(dropData.dropped), dropData.quantity, dropData.color));
 			}
 		} else {
