@@ -194,8 +194,16 @@ public class OtherBlocks extends JavaPlugin
 						}
 
 						// Dropped quantity
-						Integer dropQuantity = Integer.class.cast(m.get("quantity"));
-						bt.quantity = (dropQuantity == null || dropQuantity <= 0) ? 1 : dropQuantity;
+						try {
+						    Integer dropQuantity = Integer.class.cast(m.get("quantity"));
+						    bt.min_quantity = (dropQuantity == null || dropQuantity <= 0) ? 1 : dropQuantity;
+						    bt.max_quantity = null;
+						} catch(ClassCastException x) {
+						    String dropQuantity = String.class.cast(m.get("quantity"));
+						    String[] split = dropQuantity.split("-");
+						    bt.min_quantity = Integer.valueOf(split[0]);
+						    bt.max_quantity = Integer.valueOf(split[1]);
+						}
 
 						// Tool damage
 						Integer toolDamage = Integer.class.cast(m.get("damage"));
@@ -251,7 +259,8 @@ public class OtherBlocks extends JavaPlugin
 						log.info(getDescription().getName() + ": " +
 								(bt.tool.contains(null) ? "ALL TOOLS" : (bt.tool.size() == 1 ? bt.tool.get(0).toString() : bt.tool.toString())) + " + " +
 								creatureName(bt.original) + " now drops " +
-								(bt.quantity != 1 ? bt.quantity.toString() + "x " : "") +
+								(bt.min_quantity != 1 ? bt.min_quantity.toString() + 
+								        (bt.max_quantity == null ? "" : "-" + bt.max_quantity.toString()) + "x " : "") +
 								creatureName(bt.dropped) +
 								(bt.chance < 100 ? " with " + bt.chance.toString() + "% chance" : ""));
 					}
