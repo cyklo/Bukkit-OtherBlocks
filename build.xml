@@ -29,7 +29,7 @@
         </javac>
     </target>
 	
-    <target name="jar">
+    <target name="jar" depends="build">
         <jar destfile="${output-jar}" basedir="bin" />
     </target>
 

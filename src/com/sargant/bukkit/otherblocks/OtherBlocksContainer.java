@@ -26,6 +26,8 @@ public class OtherBlocksContainer
 	public List<String> tool;
 	public List<String> worlds;
 	public Integer quantity;
+    public Integer min_quantity;
+    public Integer max_quantity;
 	public Integer damage;
 	public Double chance;
 	public Short color;
