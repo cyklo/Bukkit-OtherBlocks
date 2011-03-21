@@ -98,6 +98,9 @@ public class OtherBlocksBlockListener extends BlockListener
 			
 			// Check target block matches
 			if(Material.valueOf(obc.original) != event.getBlock().getType()) continue;
+			
+			// Check data value of block matches
+			if(obc.originalData != null && (obc.originalData != event.getBlock().getData())) continue;
 
 			// Check probability is great than the RNG
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;

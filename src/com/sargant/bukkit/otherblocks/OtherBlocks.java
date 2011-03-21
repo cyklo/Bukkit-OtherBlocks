@@ -119,11 +119,16 @@ public class OtherBlocks extends JavaPlugin
 
 						// Source block
 						String originalString = s;
+						bt.original = null;
+						bt.originalData = (Short) null;
 						
 						if(isCreature(originalString)) {
 							bt.original = "CREATURE_" + CreatureType.valueOf(creatureName(originalString)).toString();
 						} else if(isLeafDecay(originalString)) {
 							bt.original = originalString;
+						} else if(hasDataEmbedded(originalString)) {
+							bt.original = Material.valueOf(getDataEmbeddedBlockString(originalString)).toString();
+							bt.originalData = CommonMaterial.getAnyDataShort(Material.valueOf(bt.original), getDataEmbeddedDataString(originalString));
 						} else {
 							bt.original = Material.valueOf(originalString).toString();
 						}
@@ -274,6 +279,20 @@ public class OtherBlocks extends JavaPlugin
 	
 	public static String creatureName(String s) {
 		return (isCreature(s) ? s.substring(9) :s);
+	}
+	
+	public static boolean hasDataEmbedded(String s) {
+		return s.contains("@");
+	}
+	
+	public static String getDataEmbeddedBlockString(String s) {
+		if(!hasDataEmbedded(s)) return s;
+		return s.substring(0, s.indexOf("@"));
+	}
+	
+	public static String getDataEmbeddedDataString(String s) {
+		if(!hasDataEmbedded(s)) return null;
+		return s.substring(s.indexOf("@") + 1);
 	}
 	
 	//
