@@ -362,10 +362,12 @@ public class OtherBlocks extends JavaPlugin
 				target.getWorld().dropItemNaturally(target, new ItemStack(Material.valueOf(dropData.dropped), dropData.quantity, dropData.color));
 			}
 		} else {
-			target.getWorld().spawnCreature(
-					new Location(target.getWorld(), target.getX() + 0.5, target.getY() + 1, target.getZ() + 0.5), 
-					CreatureType.valueOf(OtherBlocks.creatureName(dropData.dropped))
-					);
+			for(Integer i = 0; i < dropData.quantity; i++) {
+				target.getWorld().spawnCreature(
+						new Location(target.getWorld(), target.getX() + 0.5, target.getY() + 1, target.getZ() + 0.5), 
+						CreatureType.valueOf(OtherBlocks.creatureName(dropData.dropped))
+						);
+			}
 		}
 	}
 	
