@@ -47,10 +47,14 @@ public class OtherBlocksBlockListener extends BlockListener
 			// Check worlds match
 			if(!obc.worlds.contains(null) && !obc.worlds.contains(target.getWorld().getName())) continue;
 			
+            // Check data value of block matches
+            if(obc.originalData != null && (obc.originalData > event.getBlock().getData() ||
+                    obc.otherData < event.getBlock().getData())) continue;
+			
 			// Check RNG is OK
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
             
-            setQuantity(obc);
+            obc.setQuantity(parent.rng);
 			
 			// Now drop OK
 			successfulConversion = true;
@@ -75,7 +79,10 @@ public class OtherBlocksBlockListener extends BlockListener
 		ItemStack tool = event.getPlayer().getItemInHand();
 		Integer maxDamage = 0;
 		boolean successfulConversion = false;
-
+		
+		if(parent.verbosity > 2)
+		    System.out.println("A " + target.getType() + " was broken by " + tool.getType());
+		
 		for(OtherBlocksContainer obc : parent.transformList) {
 
 			// Check target block is not a creature
@@ -98,12 +105,13 @@ public class OtherBlocksBlockListener extends BlockListener
 			}
 			
 			// Check data value of block matches
-			if(obc.originalData != null && (obc.originalData != event.getBlock().getData())) continue;
-
+			if(obc.originalData != null && (obc.originalData > event.getBlock().getData() ||
+			        obc.otherData < event.getBlock().getData())) continue;
+			
 			// Check probability is great than the RNG
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
 			
-			setQuantity(obc);
+			obc.setQuantity(parent.rng);
 
 			// At this point, the tool and the target block match
 			successfulConversion = true;
@@ -130,11 +138,5 @@ public class OtherBlocksBlockListener extends BlockListener
 		}
 
 	}
-
-    private void setQuantity(OtherBlocksContainer obc) {
-        if(obc.min_quantity == null) obc.quantity = 1;
-        else if(obc.max_quantity == null) obc.quantity = obc.min_quantity;
-        else obc.quantity = obc.min_quantity + parent.rng.nextInt(obc.max_quantity - obc.min_quantity + 1);
-    }
 }
 

@@ -37,7 +37,7 @@ import com.sargant.bukkit.common.*;
 public class OtherBlocks extends JavaPlugin
 {
 	protected List<OtherBlocksContainer> transformList;
-	protected Map<Entity, OtherBlocksDamager> damagerList;
+	protected Map<Entity, Enum<?>> damagerList; // Where ? is one of Material, DamageCause, or CreatureType
 	protected Random rng;
 	private final OtherBlocksBlockListener blockListener;
 	private final OtherBlocksEntityListener entityListener;
@@ -48,7 +48,7 @@ public class OtherBlocks extends JavaPlugin
 	public OtherBlocks() {
 
 		transformList = new ArrayList<OtherBlocksContainer>();
-		damagerList = new HashMap<Entity, OtherBlocksDamager>();
+		damagerList = new HashMap<Entity, Enum<?>>();
 		rng = new Random();
 		blockListener = new OtherBlocksBlockListener(this);
 		entityListener = new OtherBlocksEntityListener(this);
@@ -127,7 +127,11 @@ public class OtherBlocks extends JavaPlugin
 						bt.originalData = null;
 						
 						if(isCreature(originalString)) {
-							bt.original = "CREATURE_" + CreatureType.valueOf(creatureName(originalString)).toString();
+						    if(originalString.contains("SHEEP") && hasDataEmbedded(originalString)) {
+                                bt.original = "CREATURE_" + CreatureType.valueOf(creatureName(getDataEmbeddedBlockString(originalString))).toString();
+                                bt.originalData = CommonMaterial.getAnyDataShort(Material.WOOL, getDataEmbeddedDataString(originalString));
+						    } else
+						        bt.original = "CREATURE_" + CreatureType.valueOf(creatureName(originalString)).toString();
 						} else if(isLeafDecay(originalString)) {
 							bt.original = originalString;
 						} else if(isSynonymString(originalString)) {
@@ -142,14 +146,35 @@ public class OtherBlocks extends JavaPlugin
 						} else {
 							bt.original = Material.valueOf(originalString).toString();
 						}
+						
+						// Alternate way of specifying data; normally not recommended, but it allows a range.
+						// It does not allow named data values. Most useful for crops.
+						bt.otherData = bt.originalData;
+						if(bt.originalData == null) {
+						    try {
+	                            Short data = Short.class.cast(m.get("datavalue"));
+	                            bt.originalData = (data == null || data <= 0) ? null : data;
+	                            bt.otherData = bt.originalData;
+	                        } catch(ClassCastException x) {
+	                            String data = String.class.cast(m.get("datavalue"));
+	                            String[] split = data.split("-");
+	                            bt.originalData = Short.valueOf(split[0]);
+	                            bt.otherData = Short.valueOf(split[1]);
+	                        }
+	                        if(bt.originalData != null) {
+    	                        if(bt.originalData > bt.otherData) {
+    	                            short tmp = bt.otherData;
+    	                            bt.otherData = bt.originalData;
+    	                            bt.originalData = tmp;
+    	                        }
+	                        }
+						}
 
 						// Tool used
 						bt.tool = new ArrayList<String>();
 
 						if(isLeafDecay(bt.original)) {
-							
 							bt.tool.add(null);
-							
 						} else if(m.get("tool") instanceof String) {
 
 							String toolString = (String) m.get("tool");
@@ -159,8 +184,12 @@ public class OtherBlocks extends JavaPlugin
 							if(toolString.equalsIgnoreCase("ALL") || toolString.equalsIgnoreCase("ANY")) {
 								bt.tool.add(null);
 							} else if(CommonMaterial.isValidSynonym(toolString)) {
-								bt.tool.add(toolString);
-							} else {
+                                bt.tool.add(toolString);
+                            } else if(isCreature(toolString)) {
+                                bt.tool.add(toolString);
+                            } else if(isDamage(toolString)) {
+                                bt.tool.add(toolString);
+                            } else {
 								bt.tool.add(Material.valueOf(toolString).toString());
 							}
 
@@ -170,7 +199,11 @@ public class OtherBlocks extends JavaPlugin
 								String t = (String) listTool;
 								if(CommonMaterial.isValidSynonym(t)) {
 									bt.tool.add(t);
-								} else {
+								} else if(isCreature(t)) {
+	                                bt.tool.add(t);
+	                            } else if(isDamage(t)) {
+	                                bt.tool.add(t);
+	                            } else {
 									bt.tool.add(Material.valueOf(t).toString());
 								}
 							}
@@ -202,15 +235,23 @@ public class OtherBlocks extends JavaPlugin
 						}
 
 						// Dropped quantity
+						bt.min_quantity = bt.max_quantity = 1;
 						try {
 						    Integer dropQuantity = Integer.class.cast(m.get("quantity"));
 						    bt.min_quantity = (dropQuantity == null || dropQuantity <= 0) ? 1 : dropQuantity;
-						    bt.max_quantity = null;
+						    bt.max_quantity = bt.min_quantity;
 						} catch(ClassCastException x) {
 						    String dropQuantity = String.class.cast(m.get("quantity"));
 						    String[] split = dropQuantity.split("-");
 						    bt.min_quantity = Integer.valueOf(split[0]);
 						    bt.max_quantity = Integer.valueOf(split[1]);
+						}
+						if(bt.min_quantity != null) {
+                            if(bt.max_quantity < bt.min_quantity) {
+                                int tmp = bt.min_quantity;
+                                bt.min_quantity = bt.max_quantity;
+                                bt.max_quantity = tmp;
+                            }
 						}
 
 						// Tool damage
@@ -290,10 +331,14 @@ public class OtherBlocks extends JavaPlugin
 	//
 	// Short functions
 	//
-	
-	public static boolean isCreature(String s) {
-		return s.startsWith("CREATURE_");
-	}
+    
+    public static boolean isCreature(String s) {
+        return s.startsWith("CREATURE_");
+    }
+    
+    public static boolean isDamage(String s) {
+        return s.startsWith("DAMAGE_");
+    }
 	
 	public static boolean isSynonymString(String s) {
 		return s.startsWith("ANY_");
@@ -368,18 +413,37 @@ public class OtherBlocks extends JavaPlugin
 					);
 		}
 	}
-	
-	protected static boolean containsValidToolString(String tool, List<String> haystack) {
-		if(haystack.contains(null)) return true;
-		
-		for(String haystack_straw : haystack) {
-			if(CommonMaterial.isValidSynonym(haystack_straw)
-					&& CommonMaterial.isSynonymFor(haystack_straw, Material.valueOf(tool))) {
-				return true;
-			} else if(haystack_straw.equals(tool)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    
+    protected static boolean containsValidToolString(String tool, List<String> haystack) {
+        if(haystack.contains(null)) return true;
+        
+        for(String haystack_straw : haystack) {
+            if(CommonMaterial.isValidSynonym(haystack_straw)
+                    && CommonMaterial.isSynonymFor(haystack_straw, Material.valueOf(tool))) {
+                return true;
+            } else if(haystack_straw.equals(tool)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    protected static boolean containsValidWeaponString(String tool, List<String> haystack) {
+        if(haystack.contains(null)) return true;
+        
+        for(String haystack_straw : haystack) {
+            if(haystack_straw.equals(tool)) {
+                return true;
+            } else if(haystack_straw.equals("DAMAGE_" + tool)) {
+                return true;
+            } else if(haystack_straw.equals("CREATURE_ " + tool)) {
+                return true;
+            } else if(CommonMaterial.isValidSynonym(haystack_straw)) {
+                if(CommonMaterial.isSynonymFor(haystack_straw, Material.getMaterial(tool))) {
+                    return true; // changed to getMaterial because it returns null upon not finding it instead of throwing
+                }
+            }
+        }
+        return false;
+    }
 }
