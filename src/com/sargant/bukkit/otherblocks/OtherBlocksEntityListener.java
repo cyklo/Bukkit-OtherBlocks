@@ -19,6 +19,7 @@ package com.sargant.bukkit.otherblocks;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.*;
+import org.bukkit.material.Colorable;
 
 import com.sargant.bukkit.common.*;
 
@@ -81,6 +82,11 @@ public class OtherBlocksEntityListener extends EntityListener
 			// Check target matches
 			if(!OtherBlocks.isCreature(obc.original) || CreatureType.valueOf(OtherBlocks.creatureName(obc.original)) != victimType) {
 				continue;
+			}
+			
+			// Check if creature is Colorable and if we have a color to match
+			if((obc.originalData != null) && (victim instanceof Colorable)) {
+				if(obc.originalData != ((Colorable) victim).getColor().getData()) continue;
 			}
 
 			// Check probability is great than the RNG

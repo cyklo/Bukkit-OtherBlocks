@@ -128,11 +128,9 @@ public class OtherBlocks extends JavaPlugin
 						
 						if(isCreature(originalString)) {
 							// Sheep can be coloured - check here later if need to add data vals to other mobs
+							bt.original = "CREATURE_" + CreatureType.valueOf(creatureName(getDataEmbeddedBlockString(originalString))).toString();
 							if(originalString.contains("SHEEP") && hasDataEmbedded(originalString)) {
-								bt.original = "CREATURE_" + CreatureType.valueOf(creatureName(getDataEmbeddedBlockString(originalString))).toString();
 								bt.originalData = CommonMaterial.getAnyDataShort(Material.WOOL, getDataEmbeddedDataString(originalString));
-							} else {
-								bt.original = "CREATURE_" + CreatureType.valueOf(creatureName(originalString)).toString();
 							}
 						} else if(isLeafDecay(originalString)) {
 							bt.original = getDataEmbeddedBlockString(originalString);
