@@ -129,7 +129,10 @@ public class OtherBlocks extends JavaPlugin
 						if(isCreature(originalString)) {
 							bt.original = "CREATURE_" + CreatureType.valueOf(creatureName(originalString)).toString();
 						} else if(isLeafDecay(originalString)) {
-							bt.original = originalString;
+							bt.original = getDataEmbeddedBlockString(originalString);
+							if(hasDataEmbedded(originalString)) {
+								bt.originalData = CommonMaterial.getAnyDataShort(Material.LEAVES, getDataEmbeddedDataString(originalString));
+							}
 						} else if(isSynonymString(originalString)) {
 							if(!CommonMaterial.isValidSynonym(originalString)) {
 								throw new IllegalArgumentException(originalString + " is not a valid synonym");
@@ -300,7 +303,7 @@ public class OtherBlocks extends JavaPlugin
 	}
 	
 	public static boolean isLeafDecay(String s) {
-		return s.equalsIgnoreCase("SPECIAL_LEAFDECAY");
+		return s.startsWith("SPECIAL_LEAFDECAY");
 	}
 	
 	public static String creatureName(String s) {

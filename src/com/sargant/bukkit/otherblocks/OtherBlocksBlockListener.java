@@ -47,6 +47,13 @@ public class OtherBlocksBlockListener extends BlockListener
 			// Check worlds match
 			if(!obc.worlds.contains(null) && !obc.worlds.contains(target.getWorld().getName())) continue;
 			
+			// Get the leaf's data value
+			// Beware of the 0x4 bit being set - use a bitmask of 0x3
+			Short leafData = (short) ((0x3) & event.getBlock().getData());
+			
+			// Check leaf species matches
+			if(obc.originalData != null && (obc.originalData != leafData)) continue;
+			
 			// Check RNG is OK
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
             
