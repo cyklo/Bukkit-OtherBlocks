@@ -22,6 +22,7 @@ public class OtherBlocksContainer
 {
 	public String original;
 	public Short originalData;
+	public Short originalDataRangeMax;
 	public String dropped;
 	public List<String> tool;
 	public List<String> worlds;

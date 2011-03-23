@@ -122,32 +122,31 @@ public class OtherBlocks extends JavaPlugin
 						HashMap<?, ?> m = (HashMap<?, ?>) o;
 
 						// Source block
-						String originalString = s;
+						String blockString = getDataEmbeddedBlockString(s);
+						String dataString = getDataEmbeddedDataString(s);
+						
 						bt.original = null;
 						bt.originalData = null;
+						bt.originalDataRangeMax = null;
 						
-						if(isCreature(originalString)) {
+						if(isCreature(blockString)) {
 							// Sheep can be coloured - check here later if need to add data vals to other mobs
-							bt.original = "CREATURE_" + CreatureType.valueOf(creatureName(getDataEmbeddedBlockString(originalString))).toString();
-							if(originalString.contains("SHEEP") && hasDataEmbedded(originalString)) {
-								bt.originalData = CommonMaterial.getAnyDataShort(Material.WOOL, getDataEmbeddedDataString(originalString));
+							bt.original = "CREATURE_" + CreatureType.valueOf(creatureName(blockString)).toString();
+							if(blockString.contains("SHEEP")) {
+							    setDataValues(bt, dataString, Material.WOOL);
 							}
-						} else if(isLeafDecay(originalString)) {
-							bt.original = getDataEmbeddedBlockString(originalString);
-							if(hasDataEmbedded(originalString)) {
-								bt.originalData = CommonMaterial.getAnyDataShort(Material.LEAVES, getDataEmbeddedDataString(originalString));
-							}
-						} else if(isSynonymString(originalString)) {
-							if(!CommonMaterial.isValidSynonym(originalString)) {
-								throw new IllegalArgumentException(originalString + " is not a valid synonym");
+						} else if(isLeafDecay(blockString)) {
+							bt.original = blockString;
+							setDataValues(bt, dataString, Material.LEAVES);
+						} else if(isSynonymString(blockString)) {
+							if(!CommonMaterial.isValidSynonym(blockString)) {
+								throw new IllegalArgumentException(blockString + " is not a valid synonym");
 							} else {
-								bt.original = originalString;
+								bt.original = blockString;
 							}
-						} else if(hasDataEmbedded(originalString)) {
-							bt.original = Material.valueOf(getDataEmbeddedBlockString(originalString)).toString();
-							bt.originalData = CommonMaterial.getAnyDataShort(Material.valueOf(bt.original), getDataEmbeddedDataString(originalString));
 						} else {
-							bt.original = Material.valueOf(originalString).toString();
+							bt.original = Material.valueOf(blockString).toString();
+							setDataValues(bt, dataString, Material.valueOf(blockString));
 						}
 
 						// Tool used
@@ -331,6 +330,21 @@ public class OtherBlocks extends JavaPlugin
 	//
 	// Useful longer functions
 	//
+	
+	protected static void setDataValues(OtherBlocksContainer obc, String dataString, Material material) {
+	    
+	    if(dataString == null) return;
+	    
+	    if(dataString.startsWith("RANGE-")) {
+            String[] dataStringRangeParts = dataString.split("-");
+            if(dataStringRangeParts.length != 3) throw new IllegalArgumentException("Invalid range specifier");
+            obc.originalData = Short.parseShort(dataStringRangeParts[1]);
+            obc.originalDataRangeMax = Short.parseShort(dataStringRangeParts[2]);
+        } else {
+            obc.originalData = CommonMaterial.getAnyDataShort(material, dataString);
+            obc.originalDataRangeMax = obc.originalData;
+        }
+	}
 	
 	protected static void performDrop(Location target, OtherBlocksContainer dropData) {
 		
