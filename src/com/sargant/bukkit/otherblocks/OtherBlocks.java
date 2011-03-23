@@ -208,15 +208,24 @@ public class OtherBlocks extends JavaPlugin
 						}
 
 						// Dropped quantity
+						bt.min_quantity = bt.max_quantity = 1;
 						try {
 						    Integer dropQuantity = Integer.class.cast(m.get("quantity"));
 						    bt.min_quantity = (dropQuantity == null || dropQuantity <= 0) ? 1 : dropQuantity;
-						    bt.max_quantity = null;
+						    bt.max_quantity = bt.min_quantity;
 						} catch(ClassCastException x) {
 						    String dropQuantity = String.class.cast(m.get("quantity"));
 						    String[] split = dropQuantity.split("-");
 						    bt.min_quantity = Integer.valueOf(split[0]);
 						    bt.max_quantity = Integer.valueOf(split[1]);
+						}
+						
+						if(bt.min_quantity != null) {
+						    if(bt.max_quantity < bt.min_quantity) {
+						        int tmp = bt.min_quantity;
+						        bt.min_quantity = bt.max_quantity;
+						        bt.max_quantity = tmp;
+						    }
 						}
 
 						// Tool damage

@@ -60,7 +60,7 @@ public class OtherBlocksBlockListener extends BlockListener
 			// Check RNG is OK
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
             
-            setQuantity(obc);
+            obc.setQuantity(parent.rng);
 			
 			// Now drop OK
 			successfulConversion = true;
@@ -116,7 +116,7 @@ public class OtherBlocksBlockListener extends BlockListener
 			// Check probability is great than the RNG
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
 			
-			setQuantity(obc);
+			obc.setQuantity(parent.rng);
 
 			// At this point, the tool and the target block match
 			successfulConversion = true;
@@ -143,11 +143,5 @@ public class OtherBlocksBlockListener extends BlockListener
 		}
 
 	}
-
-    private void setQuantity(OtherBlocksContainer obc) {
-        if(obc.min_quantity == null) obc.quantity = 1;
-        else if(obc.max_quantity == null) obc.quantity = obc.min_quantity;
-        else obc.quantity = obc.min_quantity + parent.rng.nextInt(obc.max_quantity - obc.min_quantity + 1);
-    }
 }
 

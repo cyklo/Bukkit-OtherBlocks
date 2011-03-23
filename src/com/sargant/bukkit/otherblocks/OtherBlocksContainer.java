@@ -17,6 +17,7 @@
 package com.sargant.bukkit.otherblocks;
 
 import java.util.List;
+import java.util.Random;
 
 public class OtherBlocksContainer
 {
@@ -32,4 +33,10 @@ public class OtherBlocksContainer
 	public Integer damage;
 	public Double chance;
 	public Short color;
+	
+	public void setQuantity(Random rng) {
+	    if(min_quantity == null) quantity = 1;
+	    else if(max_quantity == null) quantity = min_quantity;
+	    else quantity = min_quantity + rng.nextInt(max_quantity - min_quantity + 1);
+	}
 }
