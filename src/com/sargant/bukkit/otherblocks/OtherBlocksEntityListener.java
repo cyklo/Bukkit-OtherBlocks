@@ -35,22 +35,43 @@ public class OtherBlocksEntityListener extends EntityListener
 	@Override
 	public void onEntityDamage(EntityDamageEvent event) {
 		
-		if(!(event instanceof EntityDamageByEntityEvent)) {
-			parent.damagerList.remove(event.getEntity());
-			return;
+	    // Check if the damager is a player - if so, weapon is the held tool
+		if(event instanceof EntityDamageByEntityEvent) {
+		    EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
+		    if(e.getDamager() instanceof Player) {
+		        Player damager = (Player) e.getDamager();
+		        parent.damagerList.put(event.getEntity(), damager.getItemInHand().getType().toString());
+		        return;
+		    }
 		}
 		
-		EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
-		
-		if(!(e.getDamager() instanceof Player)) {
-			parent.damagerList.remove(event.getEntity());
-			return;
+		// Damager was not a person - switch through damage types
+		switch(event.getCause()) {
+		    case BLOCK_EXPLOSION:
+		    case ENTITY_EXPLOSION:
+		        parent.damagerList.put(event.getEntity(), "DAMAGE_EXPLOSION");
+		        break;
+		        
+		    case FIRE:
+		    case FIRE_TICK:
+		    case LAVA:
+		        parent.damagerList.put(event.getEntity(), "DAMAGE_FIRE");
+		        break;
+		        
+		    case CONTACT:
+		    case DROWNING:
+		    case ENTITY_ATTACK:
+		    case FALL:
+		    case SUFFOCATION:
+		        parent.damagerList.put(event.getEntity(), "DAMAGE_" + event.getCause().toString());
+		        break;
+		        
+		    case CUSTOM:
+		    case VOID:
+		    default:
+		        parent.damagerList.remove(event.getEntity());
+		        break;
 		}
-		
-		Player damager = (Player) e.getDamager();
-		
-		parent.damagerList.put(event.getEntity(), damager.getItemInHand().getType().toString());
-		return;
 	}
 	
 	@Override

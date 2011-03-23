@@ -166,6 +166,8 @@ public class OtherBlocks extends JavaPlugin
 								bt.tool.add(null);
 							} else if(CommonMaterial.isValidSynonym(toolString)) {
 								bt.tool.add(toolString);
+							} else if(isDamage(toolString)) {
+							    bt.tool.add(toolString);
 							} else {
 								bt.tool.add(Material.valueOf(toolString).toString());
 							}
@@ -176,6 +178,8 @@ public class OtherBlocks extends JavaPlugin
 								String t = (String) listTool;
 								if(CommonMaterial.isValidSynonym(t)) {
 									bt.tool.add(t);
+								} else if(isDamage(t)) {
+								    bt.tool.add(t);
 								} else {
 									bt.tool.add(Material.valueOf(t).toString());
 								}
@@ -309,6 +313,10 @@ public class OtherBlocks extends JavaPlugin
 	public static boolean isCreature(String s) {
 		return s.startsWith("CREATURE_");
 	}
+	
+	public static boolean isDamage(String s) {
+        return s.startsWith("DAMAGE_");
+    }
 	
 	public static boolean isSynonymString(String s) {
 		return s.startsWith("ANY_");
