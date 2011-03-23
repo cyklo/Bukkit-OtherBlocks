@@ -401,17 +401,23 @@ public class OtherBlocks extends JavaPlugin
 		}
 	}
 	
-	protected static boolean containsValidToolString(String tool, List<String> haystack) {
-		if(haystack.contains(null)) return true;
-		
-		for(String haystack_straw : haystack) {
-			if(CommonMaterial.isValidSynonym(haystack_straw)
-					&& CommonMaterial.isSynonymFor(haystack_straw, Material.valueOf(tool))) {
-				return true;
-			} else if(haystack_straw.equals(tool)) {
-				return true;
-			}
-		}
-		return false;
+	protected static boolean containsValidWeaponString(String tool, List<String> haystack) {
+	    if(haystack.contains(null)) return true;
+	    
+	    for(String haystack_straw : haystack) {
+	        if(haystack_straw.equals(tool)) {
+	            return true;
+	        } else if(haystack_straw.equals("DAMAGE_" + tool)) {
+	            return true;
+	        } else if(haystack_straw.equals("CREATURE_ " + tool)) {
+	            return true;
+	        } else if(CommonMaterial.isValidSynonym(haystack_straw)) {
+	            if(CommonMaterial.isSynonymFor(haystack_straw, Material.getMaterial(tool))) {
+	                return true; // changed to getMaterial because it returns null upon not finding it instead of throwing
+	            }
+	        }
+	    }
+	    
+	    return false;
 	}
 }

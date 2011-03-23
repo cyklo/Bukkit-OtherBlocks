@@ -73,7 +73,7 @@ public class OtherBlocksEntityListener extends EntityListener
 			if(!obc.worlds.contains(null) && !obc.worlds.contains(event.getEntity().getWorld().getName())) continue;
 			
 			// Check held item matches
-			if(!OtherBlocks.containsValidToolString(weapon.toString(), obc.tool)) continue;
+			if(!OtherBlocks.containsValidWeaponString(weapon.toString(), obc.tool)) continue;
 
 			// Check target matches
 			if(!OtherBlocks.isCreature(obc.original) || CreatureType.valueOf(OtherBlocks.creatureName(obc.original)) != victimType) {

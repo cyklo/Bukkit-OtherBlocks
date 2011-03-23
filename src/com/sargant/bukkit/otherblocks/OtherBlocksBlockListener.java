@@ -98,7 +98,7 @@ public class OtherBlocksBlockListener extends BlockListener
 			if(!obc.worlds.contains(null) && !obc.worlds.contains(target.getWorld().getName())) continue;
 			
 			// Check held item matches
-			if(!OtherBlocks.containsValidToolString(tool.getType().toString(), obc.tool)) continue;
+			if(!OtherBlocks.containsValidWeaponString(tool.getType().toString(), obc.tool)) continue;
 			
 			// Check target block matches
 			if(CommonMaterial.isValidSynonym(obc.original)) {
