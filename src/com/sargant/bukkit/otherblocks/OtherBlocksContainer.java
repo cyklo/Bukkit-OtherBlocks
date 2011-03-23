@@ -22,18 +22,21 @@ import java.util.Random;
 public class OtherBlocksContainer
 {
 	public String original;
-	public Short originalData;
-	public Short originalDataRangeMax;
 	public String dropped;
 	public List<String> tool;
 	public List<String> worlds;
-    private Integer quantityMin;
-    private Integer quantityMax;
 	public Integer damage;
 	public Double chance;
 	public Short color;
 	
+	private Short originalDataMin;
+    private Short originalDataMax;
+	private Integer quantityMin;
+    private Integer quantityMax;
+	
 	private static Random rng = new Random();
+	
+	// Quantity getters and setters
 	
 	public Integer getRandomQuantity() {
 	    return (quantityMin + rng.nextInt(quantityMax - quantityMin + 1));
@@ -55,5 +58,26 @@ public class OtherBlocksContainer
 	        this.quantityMax = low;
 	        this.quantityMin = high;
 	    }
+	}
+	
+	// Data getters and setters
+	
+	public void setData(Short val) {
+	    this.setData(val, val);
+	}
+	
+	public void setData(Short low, Short high) {
+	    if(low < high) {
+	        this.originalDataMin = low;
+	        this.originalDataMax = high;
+	    } else {
+	        this.originalDataMin = high;
+	        this.originalDataMax = high;
+	    }
+	}
+	
+	public boolean isDataValid(Short test) {
+	    if(this.originalDataMin == null) return true;
+	    return (test >= this.originalDataMin && test <= this.originalDataMax);
 	}
 }

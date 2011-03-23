@@ -126,8 +126,7 @@ public class OtherBlocks extends JavaPlugin
 						String dataString = getDataEmbeddedDataString(s);
 						
 						bt.original = null;
-						bt.originalData = null;
-						bt.originalDataRangeMax = null;
+						bt.setData(null);
 						
 						if(isCreature(blockString)) {
 							// Sheep can be coloured - check here later if need to add data vals to other mobs
@@ -344,11 +343,9 @@ public class OtherBlocks extends JavaPlugin
 	    if(dataString.startsWith("RANGE-")) {
             String[] dataStringRangeParts = dataString.split("-");
             if(dataStringRangeParts.length != 3) throw new IllegalArgumentException("Invalid range specifier");
-            obc.originalData = Short.parseShort(dataStringRangeParts[1]);
-            obc.originalDataRangeMax = Short.parseShort(dataStringRangeParts[2]);
+            obc.setData(Short.parseShort(dataStringRangeParts[1]), Short.parseShort(dataStringRangeParts[2]));
         } else {
-            obc.originalData = CommonMaterial.getAnyDataShort(material, dataString);
-            obc.originalDataRangeMax = obc.originalData;
+            obc.setData(CommonMaterial.getAnyDataShort(material, dataString));
         }
 	}
 	

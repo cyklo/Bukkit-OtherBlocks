@@ -102,10 +102,8 @@ public class OtherBlocksEntityListener extends EntityListener
 			}
 			
 			// Check if creature is Colorable and if we have a color to match
-			if((obc.originalData != null) && (victim instanceof Colorable)) {
-				if(((Colorable) victim).getColor().getData() < obc.originalData
-				        || ((Colorable) victim).getColor().getData() > obc.originalDataRangeMax)
-				    continue;
+			if(victim instanceof Colorable) {
+				if(!obc.isDataValid((short) ((Colorable) victim).getColor().getData())) continue;
 			}
 
 			// Check probability is great than the RNG

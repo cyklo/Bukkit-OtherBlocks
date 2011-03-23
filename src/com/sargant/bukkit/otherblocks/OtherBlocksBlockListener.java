@@ -52,10 +52,7 @@ public class OtherBlocksBlockListener extends BlockListener
 			Short leafData = (short) ((0x3) & event.getBlock().getData());
 			
 			// Check leaf species matches
-			if (obc.originalData != null
-                    && (leafData < obc.originalData 
-                            || leafData > obc.originalDataRangeMax))
-			    continue;
+			if (!obc.isDataValid(leafData)) continue;
 			
 			// Check RNG is OK
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
@@ -106,10 +103,7 @@ public class OtherBlocksBlockListener extends BlockListener
 			}
 			
 			// Check data value of block matches
-            if (obc.originalData != null
-                    && (event.getBlock().getData() < obc.originalData 
-                            || event.getBlock().getData() > obc.originalDataRangeMax))
-                continue;
+            if (!obc.isDataValid((short) event.getBlock().getData())) continue;
 
 			// Check probability is great than the RNG
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
