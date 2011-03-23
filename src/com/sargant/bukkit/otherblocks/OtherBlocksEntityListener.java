@@ -49,7 +49,7 @@ public class OtherBlocksEntityListener extends EntityListener
 		
 		Player damager = (Player) e.getDamager();
 		
-		parent.damagerList.put(event.getEntity(), damager.getItemInHand().getType());
+		parent.damagerList.put(event.getEntity(), damager.getItemInHand().getType().toString());
 		return;
 	}
 	
@@ -61,7 +61,7 @@ public class OtherBlocksEntityListener extends EntityListener
 			return;
 		}
 		
-		Material weapon = parent.damagerList.get(event.getEntity());
+		String weapon = parent.damagerList.get(event.getEntity());
 		Entity victim = event.getEntity();
 		CreatureType victimType = CommonEntity.getCreatureType(victim);
 		
@@ -73,7 +73,7 @@ public class OtherBlocksEntityListener extends EntityListener
 			if(!obc.worlds.contains(null) && !obc.worlds.contains(event.getEntity().getWorld().getName())) continue;
 			
 			// Check held item matches
-			if(!OtherBlocks.containsValidWeaponString(weapon.toString(), obc.tool)) continue;
+			if(!OtherBlocks.containsValidWeaponString(weapon, obc.tool)) continue;
 
 			// Check target matches
 			if(!OtherBlocks.isCreature(obc.original) || CreatureType.valueOf(OtherBlocks.creatureName(obc.original)) != victimType) {
