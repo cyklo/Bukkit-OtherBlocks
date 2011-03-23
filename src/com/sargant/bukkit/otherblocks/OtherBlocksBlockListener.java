@@ -59,8 +59,6 @@ public class OtherBlocksBlockListener extends BlockListener
 			
 			// Check RNG is OK
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
-            
-            obc.setQuantity(parent.rng);
 			
 			// Now drop OK
 			successfulConversion = true;
@@ -115,8 +113,6 @@ public class OtherBlocksBlockListener extends BlockListener
 
 			// Check probability is great than the RNG
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
-			
-			obc.setQuantity(parent.rng);
 
 			// At this point, the tool and the target block match
 			successfulConversion = true;

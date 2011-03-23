@@ -212,24 +212,14 @@ public class OtherBlocks extends JavaPlugin
 						}
 
 						// Dropped quantity
-						bt.quantityMin = bt.quantityMax = 1;
+						bt.setQuantity(1);
 						try {
 						    Integer dropQuantity = Integer.class.cast(m.get("quantity"));
-						    bt.quantityMin = (dropQuantity == null || dropQuantity <= 0) ? 1 : dropQuantity;
-						    bt.quantityMax = bt.quantityMin;
+						    bt.setQuantity(dropQuantity);
 						} catch(ClassCastException x) {
 						    String dropQuantity = String.class.cast(m.get("quantity"));
 						    String[] split = dropQuantity.split("-");
-						    bt.quantityMin = Integer.valueOf(split[0]);
-						    bt.quantityMax = Integer.valueOf(split[1]);
-						}
-						
-						if(bt.quantityMin != null) {
-						    if(bt.quantityMax < bt.quantityMin) {
-						        int tmp = bt.quantityMin;
-						        bt.quantityMin = bt.quantityMax;
-						        bt.quantityMax = tmp;
-						    }
+						    bt.setQuantity(Integer.valueOf(split[0]), Integer.valueOf(split[1]));
 						}
 
 						// Tool damage
@@ -286,8 +276,7 @@ public class OtherBlocks extends JavaPlugin
 						log.info(getDescription().getName() + ": " +
 								(bt.tool.contains(null) ? "ALL TOOLS" : (bt.tool.size() == 1 ? bt.tool.get(0).toString() : bt.tool.toString())) + " + " +
 								creatureName(bt.original) + " now drops " +
-								(bt.quantityMin != 1 ? bt.quantityMin.toString() + 
-								        (bt.quantityMax == null ? "" : "-" + bt.quantityMax.toString()) + "x " : "") +
+								(bt.getQuantityRange() + "x ") +
 								creatureName(bt.dropped) +
 								(bt.chance < 100 ? " with " + bt.chance.toString() + "% chance" : ""));
 					}
@@ -397,10 +386,11 @@ public class OtherBlocks extends JavaPlugin
                 }
 			// Special exemption for AIR - breaks the map! :-/
 		    } else if(Material.valueOf(dropData.dropped) != Material.AIR) {
-				target.getWorld().dropItemNaturally(target, new ItemStack(Material.valueOf(dropData.dropped), dropData.quantity, dropData.color));
+				target.getWorld().dropItemNaturally(target, new ItemStack(Material.valueOf(dropData.dropped), dropData.getRandomQuantity(), dropData.color));
 			}
 		} else {
-			for(Integer i = 0; i < dropData.quantity; i++) {
+		    Integer quantity = dropData.getRandomQuantity();
+			for(Integer i = 0; i < quantity; i++) {
 				target.getWorld().spawnCreature(
 						new Location(target.getWorld(), target.getX() + 0.5, target.getY() + 1, target.getZ() + 0.5), 
 						CreatureType.valueOf(OtherBlocks.creatureName(dropData.dropped))

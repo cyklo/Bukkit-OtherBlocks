@@ -27,16 +27,33 @@ public class OtherBlocksContainer
 	public String dropped;
 	public List<String> tool;
 	public List<String> worlds;
-	public Integer quantity;
-    public Integer quantityMin;
-    public Integer quantityMax;
+    private Integer quantityMin;
+    private Integer quantityMax;
 	public Integer damage;
 	public Double chance;
 	public Short color;
 	
-	public void setQuantity(Random rng) {
-	    if(quantityMin == null) quantity = 1;
-	    else if(quantityMax == null) quantity = quantityMin;
-	    else quantity = quantityMin + rng.nextInt(quantityMax - quantityMin + 1);
+	private static Random rng = new Random();
+	
+	public Integer getRandomQuantity() {
+	    return (quantityMin + rng.nextInt(quantityMax - quantityMin + 1));
+	}
+	
+	public String getQuantityRange() {
+	    return (quantityMin.equals(quantityMax) ? quantityMin.toString() : quantityMin.toString() + "-" + quantityMax.toString());
+	}
+	
+	public void setQuantity(Integer val) {
+	    this.setQuantity(val, val);
+	}
+	
+	public void setQuantity(Integer low, Integer high) {
+	    if(low < high) {
+	        this.quantityMin = low;
+	        this.quantityMax = high;
+	    } else {
+	        this.quantityMax = low;
+	        this.quantityMin = high;
+	    }
 	}
 }

@@ -110,8 +110,6 @@ public class OtherBlocksEntityListener extends EntityListener
 
 			// Check probability is great than the RNG
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
-			
-			obc.setQuantity(parent.rng);
 
 			event.getDrops().clear();
 			Location location = victim.getLocation();
