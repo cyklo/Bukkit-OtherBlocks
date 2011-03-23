@@ -212,23 +212,23 @@ public class OtherBlocks extends JavaPlugin
 						}
 
 						// Dropped quantity
-						bt.min_quantity = bt.max_quantity = 1;
+						bt.quantityMin = bt.quantityMax = 1;
 						try {
 						    Integer dropQuantity = Integer.class.cast(m.get("quantity"));
-						    bt.min_quantity = (dropQuantity == null || dropQuantity <= 0) ? 1 : dropQuantity;
-						    bt.max_quantity = bt.min_quantity;
+						    bt.quantityMin = (dropQuantity == null || dropQuantity <= 0) ? 1 : dropQuantity;
+						    bt.quantityMax = bt.quantityMin;
 						} catch(ClassCastException x) {
 						    String dropQuantity = String.class.cast(m.get("quantity"));
 						    String[] split = dropQuantity.split("-");
-						    bt.min_quantity = Integer.valueOf(split[0]);
-						    bt.max_quantity = Integer.valueOf(split[1]);
+						    bt.quantityMin = Integer.valueOf(split[0]);
+						    bt.quantityMax = Integer.valueOf(split[1]);
 						}
 						
-						if(bt.min_quantity != null) {
-						    if(bt.max_quantity < bt.min_quantity) {
-						        int tmp = bt.min_quantity;
-						        bt.min_quantity = bt.max_quantity;
-						        bt.max_quantity = tmp;
+						if(bt.quantityMin != null) {
+						    if(bt.quantityMax < bt.quantityMin) {
+						        int tmp = bt.quantityMin;
+						        bt.quantityMin = bt.quantityMax;
+						        bt.quantityMax = tmp;
 						    }
 						}
 
@@ -286,8 +286,8 @@ public class OtherBlocks extends JavaPlugin
 						log.info(getDescription().getName() + ": " +
 								(bt.tool.contains(null) ? "ALL TOOLS" : (bt.tool.size() == 1 ? bt.tool.get(0).toString() : bt.tool.toString())) + " + " +
 								creatureName(bt.original) + " now drops " +
-								(bt.min_quantity != 1 ? bt.min_quantity.toString() + 
-								        (bt.max_quantity == null ? "" : "-" + bt.max_quantity.toString()) + "x " : "") +
+								(bt.quantityMin != 1 ? bt.quantityMin.toString() + 
+								        (bt.quantityMax == null ? "" : "-" + bt.quantityMax.toString()) + "x " : "") +
 								creatureName(bt.dropped) +
 								(bt.chance < 100 ? " with " + bt.chance.toString() + "% chance" : ""));
 					}

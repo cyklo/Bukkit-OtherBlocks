@@ -28,15 +28,15 @@ public class OtherBlocksContainer
 	public List<String> tool;
 	public List<String> worlds;
 	public Integer quantity;
-    public Integer min_quantity;
-    public Integer max_quantity;
+    public Integer quantityMin;
+    public Integer quantityMax;
 	public Integer damage;
 	public Double chance;
 	public Short color;
 	
 	public void setQuantity(Random rng) {
-	    if(min_quantity == null) quantity = 1;
-	    else if(max_quantity == null) quantity = min_quantity;
-	    else quantity = min_quantity + rng.nextInt(max_quantity - min_quantity + 1);
+	    if(quantityMin == null) quantity = 1;
+	    else if(quantityMax == null) quantity = quantityMin;
+	    else quantity = quantityMin + rng.nextInt(quantityMax - quantityMin + 1);
 	}
 }
