@@ -37,7 +37,7 @@ import com.sargant.bukkit.common.*;
 public class OtherBlocks extends JavaPlugin
 {
 	protected List<OtherBlocksContainer> transformList;
-	protected Map<Entity, OtherBlocksDamager> damagerList;
+	protected Map<Entity, Material> damagerList;
 	protected Random rng;
 	private final OtherBlocksBlockListener blockListener;
 	private final OtherBlocksEntityListener entityListener;
@@ -48,7 +48,7 @@ public class OtherBlocks extends JavaPlugin
 	public OtherBlocks() {
 
 		transformList = new ArrayList<OtherBlocksContainer>();
-		damagerList = new HashMap<Entity, OtherBlocksDamager>();
+		damagerList = new HashMap<Entity, Material>();
 		rng = new Random();
 		blockListener = new OtherBlocksBlockListener(this);
 		entityListener = new OtherBlocksEntityListener(this);

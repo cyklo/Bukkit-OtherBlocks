@@ -49,11 +49,7 @@ public class OtherBlocksEntityListener extends EntityListener
 		
 		Player damager = (Player) e.getDamager();
 		
-		OtherBlocksDamager d = new OtherBlocksDamager();
-		
-		d.tool = damager.getItemInHand().getType();
-		
-		parent.damagerList.put(event.getEntity(), d);
+		parent.damagerList.put(event.getEntity(), damager.getItemInHand().getType());
 		return;
 	}
 	
@@ -65,7 +61,7 @@ public class OtherBlocksEntityListener extends EntityListener
 			return;
 		}
 		
-		Material weapon = parent.damagerList.get(event.getEntity()).tool;
+		Material weapon = parent.damagerList.get(event.getEntity());
 		Entity victim = event.getEntity();
 		CreatureType victimType = CommonEntity.getCreatureType(victim);
 		
