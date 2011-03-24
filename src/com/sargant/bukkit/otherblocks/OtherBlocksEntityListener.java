@@ -47,17 +47,14 @@ public class OtherBlocksEntityListener extends EntityListener
 		
 		// Damager was not a person - switch through damage types
 		switch(event.getCause()) {
-		    case BLOCK_EXPLOSION:
-		    case ENTITY_EXPLOSION:
-		        parent.damagerList.put(event.getEntity(), "DAMAGE_EXPLOSION");
-		        break;
-		        
 		    case FIRE:
 		    case FIRE_TICK:
 		    case LAVA:
 		        parent.damagerList.put(event.getEntity(), "DAMAGE_FIRE");
 		        break;
 		        
+            case BLOCK_EXPLOSION:
+            case ENTITY_EXPLOSION:
 		    case CONTACT:
 		    case DROWNING:
 		    case ENTITY_ATTACK:
