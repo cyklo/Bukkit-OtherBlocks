@@ -19,6 +19,10 @@ package com.sargant.bukkit.otherblocks;
 import java.util.List;
 import java.util.Random;
 
+import org.bukkit.Material;
+
+import com.sargant.bukkit.common.CommonMaterial;
+
 public class OtherBlocksContainer
 {
 	public String original;
@@ -47,7 +51,11 @@ public class OtherBlocksContainer
 	}
 	
 	public void setQuantity(Integer val) {
-	    this.setQuantity(val, val);
+	    try {
+ 	        this.setQuantity(val, val);
+	    } catch(NullPointerException x) {
+	        this.quantityMin = this.quantityMax = 1;
+	    }
 	}
 	
 	public void setQuantity(Integer low, Integer high) {
@@ -63,7 +71,11 @@ public class OtherBlocksContainer
 	// Data getters and setters
 	
 	public void setData(Short val) {
-	    this.setData(val, val);
+	    try {
+	        this.setData(val, val);
+	    } catch(NullPointerException x) {
+	        this.originalDataMin = this.originalDataMax = null;
+	    }
 	}
 	
 	public void setData(Short low, Short high) {
@@ -79,5 +91,61 @@ public class OtherBlocksContainer
 	public boolean isDataValid(Short test) {
 	    if(this.originalDataMin == null) return true;
 	    return (test >= this.originalDataMin && test <= this.originalDataMax);
+	}
+	
+	// Comparison tests
+	public boolean compareTo(String eventTarget, Short eventData, String eventTool, String eventWorld) {
+	    
+	    // Check original block - synonyms here
+	    if(CommonMaterial.isValidSynonym(this.original)) {
+	        if(!CommonMaterial.isSynonymFor(this.original, Material.getMaterial(eventTarget))) return false;
+	    } else{
+	        if(!this.original.equalsIgnoreCase(eventTarget)) return false;
+	    }
+	    
+	    // Check original data type if not null
+	    if(!this.isDataValid(eventData)) return false;
+	    
+	    // Check test case tool exists in array - synonyms here
+	    Boolean toolMatchFound = false;
+	    
+	    for(String loopTool : this.tool) {
+	        if(loopTool == null) {
+	            toolMatchFound = true;
+	            break;
+	        } else if(CommonMaterial.isValidSynonym(loopTool)) {
+	            if(CommonMaterial.isSynonymFor(loopTool, Material.getMaterial(eventTool))) {
+	                toolMatchFound = true;
+	                break;
+	            }
+	        } else {
+	            if(loopTool.equalsIgnoreCase(eventTool)) {
+	                toolMatchFound = true;
+	                break;
+	            }
+	        }
+	    }
+	    
+	    if(!toolMatchFound) return false;
+	    
+	    // Check worlds
+        Boolean worldMatchFound = false;
+        
+        for(String loopWorld : this.worlds) {
+            if(loopWorld == null) {
+                worldMatchFound = true;
+                break;
+            } else {
+                if(loopWorld.equalsIgnoreCase(eventWorld)) {
+                    worldMatchFound = true;
+                    break;
+                }
+            }
+        }
+        
+        if(!worldMatchFound) return false;
+	    
+        // All tests passed - return true.
+        return true;
 	}
 }

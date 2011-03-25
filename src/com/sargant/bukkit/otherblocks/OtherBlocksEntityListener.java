@@ -75,9 +75,7 @@ public class OtherBlocksEntityListener extends EntityListener
 	public void onEntityDeath(EntityDeathEvent event)
 	{
 		// At the moment, we only track creatures killed by humans
-		if(!parent.damagerList.containsKey(event.getEntity())) {
-			return;
-		}
+		if(!parent.damagerList.containsKey(event.getEntity())) return;
 		
 		String weapon = parent.damagerList.get(event.getEntity());
 		Entity victim = event.getEntity();
@@ -87,21 +85,16 @@ public class OtherBlocksEntityListener extends EntityListener
 		
 		for(OtherBlocksContainer obc : parent.transformList) {
 			
-			// Check world matches
-			if(!obc.worlds.contains(null) && !obc.worlds.contains(event.getEntity().getWorld().getName())) continue;
+		    Short dataVal = (victim instanceof Colorable) ? ((short) ((Colorable) victim).getColor().getData()) : null;
 			
-			// Check held item matches
-			if(!OtherBlocks.containsValidWeaponString(weapon, obc.tool)) continue;
-
-			// Check target matches
-			if(!OtherBlocks.isCreature(obc.original) || CreatureType.valueOf(OtherBlocks.creatureName(obc.original)) != victimType) {
-				continue;
-			}
-			
-			// Check if creature is Colorable and if we have a color to match
-			if(victim instanceof Colorable) {
-				if(!obc.isDataValid((short) ((Colorable) victim).getColor().getData())) continue;
-			}
+		    if(!obc.compareTo(
+		            "CREATURE_" + victimType.toString(), 
+		            dataVal,
+		            weapon,
+		            victim.getWorld().toString())) {
+		        
+		        continue;
+		    }
 
 			// Check probability is great than the RNG
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;

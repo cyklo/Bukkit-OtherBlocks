@@ -21,8 +21,6 @@ import org.bukkit.block.Block;
 import org.bukkit.event.block.*;
 import org.bukkit.inventory.ItemStack;
 
-import com.sargant.bukkit.common.CommonMaterial;
-
 public class OtherBlocksBlockListener extends BlockListener
 {
 	private OtherBlocks parent;
@@ -40,19 +38,18 @@ public class OtherBlocksBlockListener extends BlockListener
 		if(event.isCancelled()) return;
 		
 		for(OtherBlocksContainer obc : parent.transformList) {
-			
-			// Check it is leaf decay
-			if(!OtherBlocks.isLeafDecay(obc.original)) continue;
-			
-			// Check worlds match
-			if(!obc.worlds.contains(null) && !obc.worlds.contains(target.getWorld().getName())) continue;
-			
-			// Get the leaf's data value
-			// Beware of the 0x4 bit being set - use a bitmask of 0x3
-			Short leafData = (short) ((0x3) & event.getBlock().getData());
-			
-			// Check leaf species matches
-			if (!obc.isDataValid(leafData)) continue;
+		    
+		    // Get the leaf's data value
+            // Beware of the 0x4 bit being set - use a bitmask of 0x3
+            Short leafData = (short) ((0x3) & event.getBlock().getData());
+		    
+		    if(!obc.compareTo(
+		            "SPECIAL_LEAFDECAY", 
+		            leafData, 
+		            Material.AIR.toString(), 
+		            target.getWorld().toString())) {
+		        continue;
+		    }
 			
 			// Check RNG is OK
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
@@ -82,30 +79,17 @@ public class OtherBlocksBlockListener extends BlockListener
 		boolean successfulConversion = false;
 
 		for(OtherBlocksContainer obc : parent.transformList) {
+		    
+		    if(!obc.compareTo(
+		            event.getBlock().getType().toString(),
+		            (short) event.getBlock().getData(),
+		            tool.getType().toString(), 
+		            target.getWorld().getName())) {
+		        
+		        continue;
+		    }
 
-			// Check target block is not a creature
-			if(OtherBlocks.isCreature(obc.original)) continue;
-			
-			// Check isn't leaf decay
-			if(OtherBlocks.isLeafDecay(obc.original)) continue;
-
-			// Check worlds match
-			if(!obc.worlds.contains(null) && !obc.worlds.contains(target.getWorld().getName())) continue;
-			
-			// Check held item matches
-			if(!OtherBlocks.containsValidWeaponString(tool.getType().toString(), obc.tool)) continue;
-			
-			// Check target block matches
-			if(CommonMaterial.isValidSynonym(obc.original)) {
-				if(false == CommonMaterial.isSynonymFor(obc.original, event.getBlock().getType())) continue;
-			} else {
-				if(Material.valueOf(obc.original) != event.getBlock().getType()) continue;
-			}
-			
-			// Check data value of block matches
-            if (!obc.isDataValid((short) event.getBlock().getData())) continue;
-
-			// Check probability is great than the RNG
+		    // Check probability is great than the RNG
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
 
 			// At this point, the tool and the target block match
