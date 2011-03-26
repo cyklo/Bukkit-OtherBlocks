@@ -165,7 +165,7 @@ public class OtherBlocks extends JavaPlugin
 								bt.tool.add(null);
 							} else if(CommonMaterial.isValidSynonym(toolString)) {
 								bt.tool.add(toolString);
-							} else if(isDamage(toolString)) {
+							} else if(isDamage(toolString) || isCreature(toolString)) {
 							    bt.tool.add(toolString);
 							} else {
 								bt.tool.add(Material.valueOf(toolString).toString());

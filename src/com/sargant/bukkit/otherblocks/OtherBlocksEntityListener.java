@@ -45,6 +45,12 @@ public class OtherBlocksEntityListener extends EntityListener
 		        Player damager = (Player) e.getDamager();
 		        parent.damagerList.put(event.getEntity(), damager.getItemInHand().getType().toString());
 		        return;
+		    } else {
+		        CreatureType attacker = CommonEntity.getCreatureType(e.getDamager());
+		        if(attacker != null) {
+		            parent.damagerList.put(event.getEntity(), "CREATURE_" + attacker.toString());
+		            return;
+		        }
 		    }
 		}
 		
@@ -56,11 +62,11 @@ public class OtherBlocksEntityListener extends EntityListener
 		        parent.damagerList.put(event.getEntity(), "DAMAGE_FIRE");
 		        break;
 		        
+		    case ENTITY_ATTACK:
             case BLOCK_EXPLOSION:
             case ENTITY_EXPLOSION:
 		    case CONTACT:
 		    case DROWNING:
-		    case ENTITY_ATTACK:
 		    case FALL:
 		    case SUFFOCATION:
 		        parent.damagerList.put(event.getEntity(), "DAMAGE_" + event.getCause().toString());
