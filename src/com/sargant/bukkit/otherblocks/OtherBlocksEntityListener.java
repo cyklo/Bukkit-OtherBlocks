@@ -34,6 +34,9 @@ public class OtherBlocksEntityListener extends EntityListener
 	
 	@Override
 	public void onEntityDamage(EntityDamageEvent event) {
+	    
+	    // Ignore if a player
+	    if(event.getEntity() instanceof Player) return;
 		
 	    // Check if the damager is a player - if so, weapon is the held tool
 		if(event instanceof EntityDamageByEntityEvent) {
@@ -75,6 +78,9 @@ public class OtherBlocksEntityListener extends EntityListener
 	public void onEntityDeath(EntityDeathEvent event)
 	{
 		// At the moment, we only track creatures killed by humans
+	    if(event.getEntity() instanceof Player) return;
+	    
+	    // If there's no damage record, ignore
 		if(!parent.damagerList.containsKey(event.getEntity())) return;
 		
 		String weapon = parent.damagerList.get(event.getEntity());
