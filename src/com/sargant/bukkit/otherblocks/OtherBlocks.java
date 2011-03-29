@@ -289,7 +289,7 @@ public class OtherBlocks extends JavaPlugin
 		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, pri, this);
 		pm.registerEvent(Event.Type.LEAVES_DECAY, blockListener, pri, this);
 		pm.registerEvent(Event.Type.ENTITY_DEATH, entityListener, pri, this);
-		pm.registerEvent(Event.Type.ENTITY_DAMAGED, entityListener, pri, this);
+		pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, pri, this);
 
 		log.info(getDescription().getName() + " " + getDescription().getVersion() + " loaded.");
 	}
