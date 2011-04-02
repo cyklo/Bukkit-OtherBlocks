@@ -95,6 +95,10 @@ public class OtherBlocksEntityListener extends EntityListener
 		
 		parent.damagerList.remove(event.getEntity());
 		
+		// If victimType == null, the mob type has not been recognized (new, probably)
+		// Stop here and do not attempt to process
+		if(victimType == null) return;
+		
 		for(OtherBlocksContainer obc : parent.transformList) {
 			
 		    Short dataVal = (victim instanceof Colorable) ? ((short) ((Colorable) victim).getColor().getData()) : null;
