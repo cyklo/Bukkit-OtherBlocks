@@ -39,7 +39,7 @@ public class OtherBlocksContainer
     private Integer quantityMax;
 	
 	private static Random rng = new Random();
-	
+
 	// Quantity getters and setters
 	
 	public Integer getRandomQuantity() {

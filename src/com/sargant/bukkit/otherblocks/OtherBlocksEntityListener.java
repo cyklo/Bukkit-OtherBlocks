@@ -16,6 +16,9 @@
 
 package com.sargant.bukkit.otherblocks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.*;
@@ -99,6 +102,10 @@ public class OtherBlocksEntityListener extends EntityListener
 		// Stop here and do not attempt to process
 		if(victimType == null) return;
 		
+		Location location = victim.getLocation();
+		List<OtherBlocksContainer> drops = new ArrayList<OtherBlocksContainer>();
+		boolean doDefaultDrop = false;
+		
 		for(OtherBlocksContainer obc : parent.transformList) {
 			
 		    Short dataVal = (victim instanceof Colorable) ? ((short) ((Colorable) victim).getColor().getData()) : null;
@@ -115,11 +122,16 @@ public class OtherBlocksEntityListener extends EntityListener
 			// Check probability is great than the RNG
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
 
-			event.getDrops().clear();
-			Location location = victim.getLocation();
-			
-			OtherBlocks.performDrop(location, obc);
+			if(obc.dropped.equalsIgnoreCase("DEFAULT")) {
+			    doDefaultDrop = true;
+			} else {
+			    drops.add(obc);
+			}
 		}
+		
+		// Now do the drops
+		if(drops.size() > 0 && doDefaultDrop == false) event.getDrops().clear();
+        for(OtherBlocksContainer obc : drops) OtherBlocks.performDrop(location, obc);
 	}
 }
 

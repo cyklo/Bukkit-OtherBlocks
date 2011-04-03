@@ -190,14 +190,15 @@ public class OtherBlocks extends JavaPlugin
 
 						// Dropped item
 						String dropString = String.valueOf(m.get("drop"));
-						if(dropString.equalsIgnoreCase("DYE")) {
-							dropString = "INK_SACK";
-						}
+						if(dropString.equalsIgnoreCase("DYE")) dropString = "INK_SACK";
+						if(dropString.equalsIgnoreCase("NOTHING")) dropString = "AIR";
 
 						if(isCreature(dropString)) {
 							bt.dropped = "CREATURE_" + CreatureType.valueOf(creatureName(dropString)).toString();
 						} else if(dropString.equalsIgnoreCase("CONTENTS")) {
 						    bt.dropped = "CONTENTS";
+						} else if(dropString.equalsIgnoreCase("DEFAULT")) {
+						    bt.dropped = "DEFAULT";
 						} else {
 							bt.dropped = Material.valueOf(dropString).toString();
 						}
@@ -352,7 +353,8 @@ public class OtherBlocks extends JavaPlugin
 	protected static void performDrop(Location target, OtherBlocksContainer dropData) {
 		
 		if(!isCreature(dropData.dropped)) {
-		    if(dropData.dropped.equalsIgnoreCase("CONTENTS")) {
+		    if(dropData.dropped.equalsIgnoreCase("DEFAULT")) return;
+		    else if(dropData.dropped.equalsIgnoreCase("CONTENTS")) {
 		        Inventory inven = null;
                 switch(Material.valueOf(dropData.original)) {
 	            case FURNACE:

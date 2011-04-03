@@ -33,6 +33,7 @@ public class OtherBlocksBlockListener extends BlockListener
 	public void onLeavesDecay(LeavesDecayEvent event) {
 		
 		boolean successfulConversion = false;
+		boolean doDefaultDrop = false;
 		Block target = event.getBlock();
 		
 		if(event.isCancelled()) return;
@@ -55,11 +56,13 @@ public class OtherBlocksBlockListener extends BlockListener
 			if(parent.rng.nextDouble() > (obc.chance.doubleValue()/100)) continue;
 			
 			// Now drop OK
+			if(obc.dropped.equalsIgnoreCase("DEFAULT")) doDefaultDrop = true;
+			
 			successfulConversion = true;
 			OtherBlocks.performDrop(target.getLocation(), obc);
 		}
 		
-		if(successfulConversion) {
+		if(successfulConversion && !doDefaultDrop) {
 			// Convert the target block
 			event.setCancelled(true);
 			target.setType(Material.AIR);
@@ -77,6 +80,7 @@ public class OtherBlocksBlockListener extends BlockListener
 		ItemStack tool = event.getPlayer().getItemInHand();
 		Integer maxDamage = 0;
 		boolean successfulConversion = false;
+		boolean doDefaultDrop = false;
 
 		for(OtherBlocksContainer obc : parent.transformList) {
 		    
@@ -94,11 +98,12 @@ public class OtherBlocksBlockListener extends BlockListener
 
 			// At this point, the tool and the target block match
 			successfulConversion = true;
+			if(obc.dropped.equalsIgnoreCase("DEFAULT")) doDefaultDrop = true;
 			OtherBlocks.performDrop(target.getLocation(), obc);
 			maxDamage = (maxDamage < obc.damage) ? obc.damage : maxDamage;
 		}
 
-		if(successfulConversion) {
+		if(successfulConversion && !doDefaultDrop) {
 
 			// Convert the target block
 			event.setCancelled(true);
