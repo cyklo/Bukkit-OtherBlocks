@@ -107,7 +107,7 @@ public class OtherBlocksEntityListener extends EntityListener
 		            "CREATURE_" + victimType.toString(), 
 		            dataVal,
 		            weapon,
-		            victim.getWorld().toString())) {
+		            victim.getWorld().getName())) {
 		        
 		        continue;
 		    }
